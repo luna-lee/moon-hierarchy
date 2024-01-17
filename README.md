@@ -6,7 +6,17 @@
 
 ### 开发目的
 
-- 使用 d3 开发层级数据展示图。且支持各种自定义功能。
+-   使用 d3 开发层级数据展示图。且支持各种自定义功能。
+
+### 安装 npm i moon-hierarchy -S
+
+### vue 文件中使用
+
+```javascript
+- import hierarchy from 'moon-hierarchy';
+- import 'moon-hierarchy/dist/moon-hierarchy.css';
+  components: {  hierarchy  }
+```
 
 ### Props
 
@@ -51,7 +61,7 @@
 
 ### padding
 
-- 可以是数字，数组，函数， 函数时接受一个当前节点数据的参数，动态返回一个数组
+-   可以是数字，数组，函数， 函数时接受一个当前节点数据的参数，动态返回一个数组
 
 <!-- 数据类型 -->
 
@@ -109,41 +119,41 @@ type=[number,number,number,number]|number|(d)=>{return [number,number,number,num
 
 ### exShaps 图形配置
 
-- 一个函数，返回一个图形数组。参数为节点所有配置信息 nodeconfig
-- 每个图形，若指定了 class ，会在每次更新时触发整个节点的重新渲染。这在动态设置属性时很有用。
-- 图形嵌套，通过指定 children 实现
-- 具体配置如下：
+-   一个函数，返回一个图形数组。参数为节点所有配置信息 nodeconfig
+-   每个图形，若指定了 class ，会在每次更新时触发整个节点的重新渲染。这在动态设置属性时很有用。
+-   图形嵌套，通过指定 children 实现
+-   具体配置如下：
 
 ```javascript
-exShaps = nodeconfig => [
-  {
-    name: 'g',
-    // 属性配置
-    attrs: {
-      stroke: 'rgb(153, 153, 153)',
-      fill: 'rgb(234, 242, 255)',
-      'stroke-width': 1,
-    },
-    // 链式函数配置。如text
-    compose: {
-      text(d) {
-        return d.name
-      },
-    },
-    // 监听事件配置。
-    on: {
-      click(e, d) {},
-    },
-    children: [
-      {
-        name: 'circle',
+exShaps = (nodeconfig) => [
+    {
+        name: 'g',
+        // 属性配置
         attrs: {
-          r: 20,
+            stroke: 'rgb(153, 153, 153)',
+            fill: 'rgb(234, 242, 255)',
+            'stroke-width': 1
         },
-      },
-    ],
-  },
-]
+        // 链式函数配置。如text
+        compose: {
+            text(d) {
+                return d.name;
+            }
+        },
+        // 监听事件配置。
+        on: {
+            click(e, d) {}
+        },
+        children: [
+            {
+                name: 'circle',
+                attrs: {
+                    r: 20
+                }
+            }
+        ]
+    }
+];
 ```
 
 ### arrow 箭头配置
@@ -200,3 +210,140 @@ exShaps = nodeconfig => [
 | click              | 鼠标事件                                               | e:鼠标信息,d:当前节点信息 |
 | mouseover          | 鼠标事件                                               | e:鼠标信息,d:当前节点信息 |
 | mouseout           | 鼠标事件                                               | e:鼠标信息,d:当前节点信息 |
+
+# Demo
+
+```javascript
+<template>
+    <div>
+        <div class="pannel">
+            <div>
+                <input type="radio" id="h" value="h" v-model="mode" />
+                <label for="h">水平模式</label>
+                <input type="radio" id="v" value="v" v-model="mode" />
+                <label for="v">垂直模式</label>
+            </div>
+            <div v-if="mode == 'h'">
+                <input type="radio" id="h-lr" value="lr" v-model="layout" />
+                <label for="h-lr">左-右布局</label>
+                <input type="radio" id="h-rl" value="rl" v-model="layout" />
+                <label for="h-rl">右-左布局</label>
+                <input type="radio" id="h-bf" value="bf" v-model="layout" />
+                <label for="h-bf">蝴蝶布局</label>
+            </div>
+            <div v-if="mode == 'v'">
+                <input type="radio" id="tb" value="tb" v-model="layout" />
+                <label for="tb">上-下布局</label>
+                <input type="radio" id="bt" value="bt" v-model="layout" />
+                <label for="bt">下-上布局</label>
+                <input type="radio" id="v-bf" value="bf" v-model="layout" />
+                <label for="v-bf">蝴蝶布局</label>
+            </div>
+        </div>
+        <hierarchy
+            :mode="mode"
+            :treeData="treeData"
+            :treeOptions="{ id: 'code', pId: 'pcode' }"
+            :layout="layout"
+            :negativeIds="['qydak', 'root1', 'root2', 'root3']"
+            :listener="listener"
+            :config="config"
+            :width="width"
+            :height="height"
+        ></hierarchy>
+    </div>
+</template>
+<script>
+import hierarchy from 'moon-hierarchy';
+import 'moon-hierarchy/dist/moon-hierarchy.css';
+import dataTree from './dataTree';
+export default {
+    inheritAttrs: false,
+    name: '',
+    props: {},
+    components: {
+        hierarchy
+    },
+    created() {
+        this.setWidthHeight();
+        window.addEventListener('resize', () => {
+            // 窗口大小改变时执行的操作
+            this.setWidthHeight();
+        });
+    },
+    mounted() {},
+    data() {
+        return {
+            mode: 'h',
+            layout: 'bf',
+            treeData: dataTree,
+            width: 0,
+            height: 0,
+            config: {
+                node: {}
+            },
+            listener: {
+                clickFetchChildren: (d) => {
+                  // 异步加载数据
+                    return new Promise((r) => {
+                        setTimeout(() => {
+                            d.children = [
+                                {
+                                    id: '32323',
+                                    name: '金融贷款余额test',
+                                    code: '980eccec9a23237b49e488c10f8fa70f9c2d'
+                                },
+                                {
+                                    id: '3233',
+                                    name: '金融贷款余额test',
+                                    code: '980444eccec9a23237b49e488c10f8fa70f9c2d'
+                                },
+                                {
+                                    id: '323243333',
+                                    name: '金融贷款余额test',
+                                    code: '1980eccec9a23237b49e488c10f8fa70f9c2d'
+                                },
+                                {
+                                    id: '323323',
+                                    name: '金融贷款余额test',
+                                    code: '2980eccec9a23237b49e488c10f8fa70f9c2d'
+                                },
+                                {
+                                    id: '323223',
+                                    name: '金融贷款余额test',
+                                    code: '3980eccec9a23237b49e488c10f8fa70f9c2d'
+                                },
+                                {
+                                    id: '323123',
+                                    name: '金融贷款余额test',
+                                    code: '480eccec9a23237b49e488c10f8fa70f9c2d'
+                                },
+                                {
+                                    id: '323232',
+                                    name: '金融贷款余额test',
+                                    code: '94580eccec9a23237b49e488c10f8fa70f9c2d'
+                                }
+                            ];
+                            r();
+                        }, 2000);
+                    });
+                }
+            }
+        };
+    },
+    watch: {},
+    computed: {},
+    methods: {
+        setWidthHeight() {
+            this.width = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) - 10;
+            this.height = (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight) - 30;
+        }
+    }
+};
+</script>
+<style lang="scss">
+.pannel {
+    position: absolute;
+}
+</style> 
+```
