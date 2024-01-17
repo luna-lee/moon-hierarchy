@@ -213,7 +213,7 @@ exShaps = (nodeconfig) => [
 
 # Demo
 
-```javascript
+```javascript 
 <template>
     <div>
         <div class="pannel">
@@ -256,7 +256,6 @@ exShaps = (nodeconfig) => [
 <script>
 import hierarchy from 'moon-hierarchy';
 import 'moon-hierarchy/dist/moon-hierarchy.css';
-import dataTree from './dataTree';
 export default {
     inheritAttrs: false,
     name: '',
@@ -271,12 +270,21 @@ export default {
             this.setWidthHeight();
         });
     },
-    mounted() {},
+    mounted() {
+        let _this = this;
+        fetch('https://www.1724956493.top/files/d3335980e04011ed91b4f7437d34c747/dataTree.js')
+            .then((response) => {
+                return response.text();
+            })
+            .then((data) => {
+                _this.treeData = eval(data);
+            });
+    },
     data() {
         return {
             mode: 'h',
             layout: 'bf',
-            treeData: dataTree,
+            treeData: [],
             width: 0,
             height: 0,
             config: {
@@ -284,7 +292,6 @@ export default {
             },
             listener: {
                 clickFetchChildren: (d) => {
-                  // 异步加载数据
                     return new Promise((r) => {
                         setTimeout(() => {
                             d.children = [
@@ -345,5 +352,6 @@ export default {
 .pannel {
     position: absolute;
 }
-</style> 
+</style>
+
 ```
