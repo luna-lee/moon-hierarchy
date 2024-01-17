@@ -1,0 +1,24 @@
+{
+  "name": "moon-hierarchy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/moon-hierarchy.umd.min.js",
+  "module": "./dist/moon-hierarchy.umd.min.js",
+  "homepage": " ",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">= 10.13.0"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "dependencies": {
+    "d3": "^7.8.5",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {}
+}
