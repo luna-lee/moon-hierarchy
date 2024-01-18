@@ -32,8 +32,8 @@
 | listener         | 节点监听 ，详情见下方说明                                                  | Object           | -       | {}                                   |
 | config           | 配置节点连线，详情见下方说明                                               | Object           | -       | {}                                   |
 | canExpendFold    | 子节点是否可以通过点击，展开和收缩 ,函数接受当前节点数据，返回一个 boolean | Boolean,Function | -       | true                                 |
-| expendShape      | 指定点击展开的元素，可以是 id，css 或元素,默认整个节点                     | string           | -       | -                                    |
-| foldShape        | 指定点击闭合的元素，可以是 id，css 或元素 ,默认整个节点                    | string           | -       | -                                    |
+| expendShape      | 指定点击展开的元素，可以是 id，class 或元素,默认整个节点                   | string           | -       | -                                    |
+| foldShape        | 指定点击闭合的元素，可以是 id，class 或元素 ,默认整个节点                  | string           | -       | -                                    |
 
 ### Props config
 
@@ -209,9 +209,18 @@ exShaps = (nodeconfig) => [
 | mouseover          | 鼠标事件                                               | e:鼠标信息,d:当前节点信息 |
 | mouseout           | 鼠标事件                                               | e:鼠标信息,d:当前节点信息 |
 
+### 各个节点，图形默认的 id 和 class
+
+| 名称          | class               | id                                         |
+| ------------- | ------------------- | ------------------------------------------ |
+| 节点          | moon-hierarchy-node | 'node'+ 节点数据中的唯一标识字段对应的数据 |
+| 节点-text     | moon-hierarchy-text | -                                          |
+| 节点-伸缩图形 | moon-hierarchy-plus | -                                          |
+| 连线          | -                   | 'link'+"起点 id-终点 id"                   |
+
 # Demo
 
-```javascript 
+```javascript
 <template>
     <div>
         <div class="pannel">
