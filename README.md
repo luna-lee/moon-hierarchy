@@ -1,7 +1,5 @@
 # moon-hierarchy
 
-### 作者：闰月飞鸟；时间：2024 年 01 月 15 日 13:45:02
-
 ### 预览地址：https://www.1724956493.top/demo/html/d3/hierarchy/#/
 
 ### 开发目的
