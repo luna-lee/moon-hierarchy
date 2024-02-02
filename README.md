@@ -204,7 +204,7 @@ exShaps = (nodeconfig) => [
 
 | 名称               | 说明                                                   | 参数                      |
 | ------------------ | ------------------------------------------------------ | ------------------------- |
-| clickFetchChildren | 点击后异步加载子节点。父节点上需要有\_hasChildren 标记 | d:当前节点源数据信息      |
+| clickFetchChildren | 点击后异步加载子节点。父节点上需要有\_hasChildren 标记 ,返回一个数组，可以是层级结构的数据| d:当前节点源数据信息      |
 | click              | 鼠标事件                                               | e:鼠标信息,d:当前节点信息 |
 | mouseover          | 鼠标事件                                               | e:鼠标信息,d:当前节点信息 |
 | mouseout           | 鼠标事件                                               | e:鼠标信息,d:当前节点信息 |
@@ -300,8 +300,8 @@ export default {
             listener: {
                 clickFetchChildren: (d) => {
                     return new Promise((r) => {
-                        setTimeout(() => {
-                            d.children = [
+                        setTimeout(() => { 
+                            r([
                                 {
                                     id: '32323',
                                     name: '金融贷款余额test',
@@ -337,8 +337,7 @@ export default {
                                     name: '金融贷款余额test',
                                     code: '94580eccec9a23237b49e488c10f8fa70f9c2d'
                                 }
-                            ];
-                            r();
+                            ]);
                         }, 2000);
                     });
                 }
