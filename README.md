@@ -195,14 +195,18 @@ exShaps = (nodeconfig) => [
 ```javascript
 {
   attrs:object,
-  path:string
+  path:{
+    attrs:{
+        ...
+    }
+  }
 }
 ```
-
+### arrow 连线配置
 | 参数  | 说明             | 默认值                                                                                                                             |
 | ----- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
 | attrs | 箭头 marker 配置 | { viewBox: '0 0 10 10', refX: '10', refY: '5', markerWidth: '6', markerHeight: '6', fill: '#128BED', orient: 'auto-start-reverse'} |
-| path  | 箭头路径配置     | ’M 0 0 L 10 5 L 0 10 z‘                                                                                                            |
+| path.attrs  | path 配置    |{ d:’M 0 0 L 10 5 L 0 10 z}‘                                                                                                            |
 
 ### link 连线配置
 
