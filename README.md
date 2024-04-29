@@ -18,22 +18,22 @@
 
 ### Props
 
-| 参数             | 说明                                                                       | 类型             | 可选值  | 默认值                               |
-| ---------------- | -------------------------------------------------------------------------- | ---------------- | ------- | ------------------------------------ |
-| width            | svg 宽度                                                                   | Number           | -       | 1300                                 |
-| height           | svg 高度                                                                   | Number           | -       | 800                                  |
-| mode             | 渲染模式：水平方向，垂直方向                                               | String           | v,h     | h                                    |
-| layout           | 布局：水平方向-左右，右左，蝴蝶，垂直->上下，下上，蝴蝶                    | String           | -       | tb/bt/bf, lr/rl/bf                   |
-| limit            | 水平模式，子节点最大展示数，多余的出收起按钮 ，-1 时全部展出               | Number           | -1；1+  | 3                                    |
-| treeData         | 扁平化树数据                                                               | Array            | -       | []                                   |
-| treeOptions      | 树数据选项                                                                 | Object           | -       | { id: 'id',pId: 'pId',name: 'name',} |
-| defaultOpenLevel | 默认展开层级，-1 时全部展开                                                | Number           | -1 ，1+ | 2                                    |
-| negativeIds      | 蝴蝶模型，指定负向数据对应的 id，必须是根节点的直接子节点                  | Array            | -       | []                                   |
-| listener         | 节点监听 ，详情见下方说明                                                  | Object           | -       | {}                                   |
-| config           | 配置节点连线，详情见下方说明                                               | Object           | -       | {}                                   |
-| canExpendFold    | 子节点是否可以通过点击，展开和收缩 ,函数接受当前节点数据，返回一个 boolean | Boolean,Function | -       | true                                 |
-| expendShape      | 指定点击展开的元素，可以是 id，class 或元素,默认整个节点                   | string           | -       | -                                    |
-| foldShape        | 指定点击闭合的元素，可以是 id，class 或元素 ,默认整个节点                  | string           | -       | -                                    |
+| 参数             | 说明                                                                                         | 类型                  | 可选值  | 默认值                               |
+| ---------------- | -------------------------------------------------------------------------------------------- | --------------------- | ------- | ------------------------------------ |
+| width            | svg 宽度                                                                                     | Number                | -       | 1300                                 |
+| height           | svg 高度                                                                                     | Number                | -       | 800                                  |
+| mode             | 渲染模式：水平方向，垂直方向                                                                 | String                | v,h     | h                                    |
+| layout           | 布局：水平方向-左右，右左，蝴蝶，垂直->上下，下上，蝴蝶                                      | String                | -       | tb/bt/bf, lr/rl/bf                   |
+| limit            | 水平模式，子节点最大展示数，多余的出收起按钮 ，-1 时全部展出                                 | Number                | -1；1+  | 3                                    |
+| treeData         | 扁平化树数据                                                                                 | Array                 | -       | []                                   |
+| treeOptions      | 树数据选项                                                                                   | Object                | -       | { id: 'id',pId: 'pId',name: 'name',} |
+| defaultOpenLevel | 默认展开层级，-1 时全部展开                                                                  | Number                | -1 ，1+ | 2                                    |
+| negativeIds      | 蝴蝶模型，指定负向数据对应的 id，必须是根节点的直接子节点                                    | Array                 | -       | []                                   |
+| listener         | 节点监听 ，详情见下方说明                                                                    | Object                | -       | {}                                   |
+| config           | 配置节点连线，详情见下方说明                                                                 | Object                | -       | {}                                   |
+| canExpendFold    | 点击当前节点，展开和收缩子节点 ,传入函数，则接受当前节点数据，返回一个 boolean               | Boolean, (d)=>boolean | -       | true                                 |
+| expendShape      | 指定点击展开的元素，必须同时设置 foldShape 才起作用，可以是 id，class 或元素,默认整个节点    | string                | -       | -                                    |
+| foldShape        | 指定点击闭合的元素，必须同时设置 expendShape 才起作用，可以是 id，class 或元素 ,默认整个节点 | string                | -       | -                                    |
 
 ### Props config
 
@@ -74,6 +74,7 @@ type=[number,number,number,number]|number|(d)=>{return [number,number,number,num
 ```javascript
 {
   attrs:object,
+  on:object,
   show:boolean
 }
 ```
@@ -90,6 +91,8 @@ type=[number,number,number,number]|number|(d)=>{return [number,number,number,num
 ```javascript
 {
   attrs:object,
+  on:object,
+  compose:object,
   show:boolean
 }
 ```
@@ -106,6 +109,7 @@ type=[number,number,number,number]|number|(d)=>{return [number,number,number,num
 ```javascript
 {
   attrs:object,
+  on:object,
   show:boolean
 }
 ```
@@ -177,10 +181,10 @@ exShaps = (nodeconfig) => [
 {
 "data": {
 ...业务数据
-"\_hasChildren": true, //子节点判断标记
-"\_sign": 1, //不同模型下，上下，左右标记。 左、上：-1。 右，下：1
-"\_nodeWidth": 168, //当前节点宽度
-"\_name": []
+"_hasChildren": true, //子节点判断标记
+"_sign": 1, //不同模型下，上下，左右标记。 左、上：-1。 右，下：1
+"_nodeWidth": 168, //当前节点宽度
+"_name": []
 },
 "x": 126, //节点坐标
 "y": 136 //节点坐标
@@ -244,6 +248,7 @@ exShaps = (nodeconfig) => [
 | click              | 鼠标事件                                                                                   | e:鼠标信息,d:当前节点信息 |
 | mouseover          | 鼠标事件                                                                                   | e:鼠标信息,d:当前节点信息 |
 | mouseout           | 鼠标事件                                                                                   | e:鼠标信息,d:当前节点信息 |
+| 其他事件           | 其他事件                                                                                   | e:鼠标信息,d:当前节点信息 |
 
 ### 各个节点，图形默认的 id 和 class
 
@@ -293,6 +298,8 @@ exShaps = (nodeconfig) => [
             :config="config"
             :width="width"
             :height="height"
+            expendShape=".moon-hierarchy-plus"
+            foldShape=".moon-hierarchy-plus"
         ></hierarchy>
     </div>
 </template>
