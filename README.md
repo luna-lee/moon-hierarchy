@@ -231,14 +231,16 @@ exShaps = (nodeconfig) => [
 ```javascript
 {
   defaultScale:number,
-  scaleRange:[number,number]
+  scaleRange:[number,number],
+  callback:(e)=>void
 }
 ```
 
-| 参数         | 说明       | 默认值  |
-| ------------ | ---------- | ------- |
-| defaultScale | 默认缩放值 | 1       |
-| scaleRange   | 可缩放范围 | [0.2,2] |
+| 参数         | 说明                       | 默认值  |
+| ------------ | -------------------------- | ------- |
+| defaultScale | 默认缩放值                 | 1       |
+| scaleRange   | 可缩放范围                 | [0.2,2] |
+| callback     | 缩放回到函数，接受缩放参数 | -       |
 
 ### listener 节点监听
 
