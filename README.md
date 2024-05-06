@@ -22,7 +22,7 @@
 | ---------------- | -------------------------------------------------------------------------------------------- | --------------------- | ------- | ------------------------------------ |
 | width            | svg 宽度                                                                                     | Number                | -       | 1300                                 |
 | height           | svg 高度                                                                                     | Number                | -       | 800                                  |
-| mode             | 渲染模式：水平方向，垂直方向                                                                 | String                | v,h     | h                                    |
+| mode             | 渲染模式：水平方向 h，垂直方向 v                                                             | String                | h,v     | h                                    |
 | layout           | 布局：水平方向-左右，右左，蝴蝶，垂直->上下，下上，蝴蝶                                      | String                | -       | tb/bt/bf, lr/rl/bf                   |
 | limit            | 水平模式，子节点最大展示数，多余的出收起按钮 ，-1 时全部展出                                 | Number                | -1；1+  | 3                                    |
 | treeData         | 扁平化树数据                                                                                 | Array                 | -       | []                                   |
@@ -92,7 +92,7 @@ type=[number,number,number,number]|number|(d)=>{return [number,number,number,num
 {
   attrs:object,
   on:object,
-  compose:object,
+  compose:object,// mode 水平模式可配置
   show:boolean
 }
 ```
