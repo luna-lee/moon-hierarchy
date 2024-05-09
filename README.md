@@ -1,6 +1,6 @@
 # moon-hierarchy
 
-### 预览地址：https://www.1724956493.top/demo/html/d3/hierarchy/#/
+### 预览地址：https://www.fste.top/demo/html/d3/hierarchy/#/
 
 ### 开发目的
 
@@ -324,7 +324,7 @@ export default {
     },
     mounted() {
         let _this = this;
-        fetch('https://www.1724956493.top/files/d3335980e04011ed91b4f7437d34c747/dataTree.js')
+        fetch('https://www.fste.top/files/d3335980e04011ed91b4f7437d34c747/dataTree.js')
             .then((response) => {
                 return response.text();
             })
