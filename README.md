@@ -252,17 +252,6 @@ exShaps = (nodeconfig) => [
 | mouseout           | 鼠标事件                                                                                   | e:鼠标信息,d:当前节点信息,el:当前节点对应的 d3 元素对象,d3:d3 实例对象  |
 | 其他事件           | 其他事件                                                                                   | e:鼠标信息,d:当前节点信息,el:当前节点对应的 d3 元素对象,d3:d3 实例对象  |
 
-### 各个节点，图形默认的 id 和 class
-
-| 名称                                       | class                          | id                                         |
-| ------------------------------------------ | ------------------------------ | ------------------------------------------ |
-| 节点                                       | moon-hierarchy-node            | 'node'+ 节点数据中的唯一标识字段对应的数据 |
-| 节点-展开/收起                             | moon-hierarchy-expend-button   | 'node'+ 节点数据中的唯一标识字段对应的数据 |
-| 节点-rect                                  | moon-hierarchy-rect            | -                                          |
-| 节点-text                                  | moon-hierarchy-text            | -                                          |
-| 节点-伸缩图形                              | moon-hierarchy-plus            | -                                          |
-| 连线                                       | moon-hierarchy-link            | 'link'+"起点 id-终点 id"                   |
-| 节点鼠标悬浮，该节点对应的所有子节点间连线 | moon-hierarchy-node-hover-link | 'link'+"起点 id-终点 id"                   |
 
 ### Methods
 
@@ -270,6 +259,78 @@ exShaps = (nodeconfig) => [
 | ----------- | ------------------------------------------------------------------------------- | -------------------------------------------- |
 | getNodeById | 依据 数据中唯一标识 id，对应 treeOptions 中的 id， 获取对应的数据，以及元素对象 | id:string=>({ data: Object, el: d3Element }) |
 | getAllNode  | 获取所有非展开收起的节点，对应的数据，以及元素对象                              | （）=>({ data: Object, el: d3Element }[])    |
+
+
+
+
+### 各个节点，图形默认的 id 和 class
+
+| 名称                                       | class                          | id                                         |
+| ------------------------------------------ | ------------------------------ | ------------------------------------------ |
+| 节点                                       | moon-hierarchy-node            | 'node'+ 节点数据中的唯一标识字段对应的数据 |
+| 节点-展开/收起                             | moon-hierarchy-expend-button   | 'node'+ 节点数据中的唯一标识字段对应的数据 |
+| 节点-根节点                                | moon-hierarchy-node-root       | 'node'+ 节点数据中的唯一标识字段对应的数据 |
+| 节点-rect                                  | moon-hierarchy-rect            | -                                          |
+| 节点-text                                  | moon-hierarchy-text            | -                                          |
+| 节点-伸缩图形                              | moon-hierarchy-plus            | -                                          |
+| 连线                                       | moon-hierarchy-link            | 'link'+"起点 id-终点 id"                   |
+| 节点鼠标悬浮，该节点对应的所有子节点间连线 | moon-hierarchy-node-hover-link | 'link'+"起点 id-终点 id"                   |
+
+## DefaultStyle
+- 可以自行依据项目修改
+```CSS
+    .moon-hierarchy-node {
+        .moon-hierarchy-rect {
+            fill: #fff;
+        }
+        &.moon-hierarchy-node-root {
+            .moon-hierarchy-rect {
+                fill: rgb(18, 137, 239);
+            }
+        }
+        &.moon-hierarchy-expend-button {
+            .moon-hierarchy-rect {
+                fill: rgb(247, 247, 247);
+            }
+        }
+        &:not(.moon-hierarchy-expend-button):hover {
+            .moon-hierarchy-rect {
+                stroke: rgb(18, 137, 239);
+            }
+        }
+    }
+    .moon-hierarchy-link {
+        stroke: #d8d8d8;
+        stroke-opacity: 1;
+        stroke-width: 1;
+    }
+    .moon-hierarchy-node-hover-link {
+        stroke-dasharray: 1000;
+        stroke-dashoffset: 1000;
+        animation: moon-hierarchy-link-run 20s linear infinite;
+    }
+    .moon-hierarchy-loading {
+        animation: moon-hierarchy-rotate 3s linear infinite;
+    }
+    @keyframes moon-hierarchy-rotate {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes moon-hierarchy-link-run {
+        from {
+            stroke-dasharray: 10, 5;
+        }
+        to {
+            stroke-dasharray: 20, 5;
+        }
+    }
+
+```
 
 # Demo
 
