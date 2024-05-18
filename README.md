@@ -244,27 +244,30 @@ exShaps = (nodeconfig) => [
 
 ### listener 节点监听
 
-| 名称               | 说明                                                                                       | 参数                      |
-| ------------------ | ------------------------------------------------------------------------------------------ | ------------------------- |
-| clickFetchChildren | 点击后异步加载子节点。父节点上需要有\_hasChildren 标记 ,返回一个数组，可以是层级结构的数据 | d:当前节点源数据信息      |
-| click              | 鼠标事件                                                                                   | e:鼠标信息,d:当前节点信息 |
-| mouseover          | 鼠标事件                                                                                   | e:鼠标信息,d:当前节点信息 |
-| mouseout           | 鼠标事件                                                                                   | e:鼠标信息,d:当前节点信息 |
-| 其他事件           | 其他事件                                                                                   | e:鼠标信息,d:当前节点信息 |
+| 名称               | 说明                                                                                       | 参数                                                                    |
+| ------------------ | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
+| clickFetchChildren | 点击后异步加载子节点。父节点上需要有\_hasChildren 标记 ,返回一个数组，可以是层级结构的数据 | data:当前节点源数据信息 ,el:当前节点对应的 d3 元素对象,d3:d3 实例对象   |
+| click              | 鼠标事件                                                                                   | e:鼠标信息,d:当前节点信息,el:当前节点对应的 d3 元素对象,d3:d3 实例对象  |
+| mouseover          | 鼠标事件                                                                                   | e:鼠标信息,d:当前节点信息 ,el:当前节点对应的 d3 元素对象,d3:d3 实例对象 |
+| mouseout           | 鼠标事件                                                                                   | e:鼠标信息,d:当前节点信息,el:当前节点对应的 d3 元素对象,d3:d3 实例对象  |
+| 其他事件           | 其他事件                                                                                   | e:鼠标信息,d:当前节点信息,el:当前节点对应的 d3 元素对象,d3:d3 实例对象  |
 
 ### 各个节点，图形默认的 id 和 class
 
-| 名称          | class               | id                                         |
-| ------------- | ------------------- | ------------------------------------------ |
-| 节点          | moon-hierarchy-node | 'node'+ 节点数据中的唯一标识字段对应的数据 |
-| 节点-text     | moon-hierarchy-text | -                                          |
-| 节点-伸缩图形 | moon-hierarchy-plus | -                                          |
-| 连线          | -                   | 'link'+"起点 id-终点 id"                   |
+| 名称                                       | class                          | id                                         |
+| ------------------------------------------ | ------------------------------ | ------------------------------------------ |
+| 节点                                       | moon-hierarchy-node            | 'node'+ 节点数据中的唯一标识字段对应的数据 |
+| 节点-展开/收起                             | moon-hierarchy-expend-button   | 'node'+ 节点数据中的唯一标识字段对应的数据 |
+| 节点-rect                                  | moon-hierarchy-rect            | -                                          |
+| 节点-text                                  | moon-hierarchy-text            | -                                          |
+| 节点-伸缩图形                              | moon-hierarchy-plus            | -                                          |
+| 连线                                       | moon-hierarchy-link            | 'link'+"起点 id-终点 id"                   |
+| 节点鼠标悬浮，该节点对应的所有子节点间连线 | moon-hierarchy-node-hover-link | 'link'+"起点 id-终点 id"                   |
 
 # Demo
 
 ```javascript
-<template>
+ <template>
     <div>
         <div class="pannel">
             <div>
@@ -273,22 +276,20 @@ exShaps = (nodeconfig) => [
                 <input type="radio" id="v" value="v" v-model="mode" />
                 <label for="v">垂直模式</label>
             </div>
-            <div v-if="mode == 'h'">
-                <input type="radio" id="h-lr" value="lr" v-model="layout" />
-                <label for="h-lr">左-右布局</label>
-                <input type="radio" id="h-rl" value="rl" v-model="layout" />
-                <label for="h-rl">右-左布局</label>
-                <input type="radio" id="h-bf" value="bf" v-model="layout" />
-                <label for="h-bf">蝴蝶布局</label>
+            <div class="item" v-if="mode == 'h'">
+                <div><input type="radio" id="h-lr" value="lr" v-model="layout" /> <label for="h-lr">左-右布局</label></div>
+                <div><input type="radio" id="h-rl" value="rl" v-model="layout" /> <label for="h-rl">右-左布局</label></div>
+                <div><input type="radio" id="h-bf" value="bf" v-model="layout" /> <label for="h-bf">蝴蝶布局</label></div>
             </div>
-            <div v-if="mode == 'v'">
-                <input type="radio" id="tb" value="tb" v-model="layout" />
-                <label for="tb">上-下布局</label>
-                <input type="radio" id="bt" value="bt" v-model="layout" />
-                <label for="bt">下-上布局</label>
-                <input type="radio" id="v-bf" value="bf" v-model="layout" />
-                <label for="v-bf">蝴蝶布局</label>
+            <div class="item" v-if="mode == 'v'">
+                <div><input type="radio" id="tb" value="tb" v-model="layout" /> <label for="tb">上-下布局</label></div>
+                <div><input type="radio" id="bt" value="bt" v-model="layout" /> <label for="bt">下-上布局</label></div>
+                <div><input type="radio" id="v-bf" value="bf" v-model="layout" /> <label for="v-bf">蝴蝶布局</label></div>
             </div>
+        </div>
+        <div class="document">
+            <router-link to="/md-view" target="_blank">文档</router-link>
+            <a href="https://github.com/luna-lee/moon-hierarchy" target="_blank">github地址</a>
         </div>
         <hierarchy
             :mode="mode"
@@ -300,14 +301,11 @@ exShaps = (nodeconfig) => [
             :config="config"
             :width="width"
             :height="height"
-            expendShape=".moon-hierarchy-plus"
-            foldShape=".moon-hierarchy-plus"
         ></hierarchy>
     </div>
 </template>
 <script>
-import hierarchy from 'moon-hierarchy';
-import 'moon-hierarchy/dist/moon-hierarchy.css';
+import hierarchy from '@/components/moon-hierarchy/index.vue';
 export default {
     inheritAttrs: false,
     name: '',
@@ -340,10 +338,14 @@ export default {
             width: 0,
             height: 0,
             config: {
-                node: {}
+                node: {},
+                arrow: {
+                    show: false
+                }
             },
             listener: {
-                clickFetchChildren: (d) => {
+                clickFetchChildren: (data, node, d3) => {
+                    console.log(data, node, d3);
                     return new Promise((r) => {
                         setTimeout(() => {
                             r([
@@ -381,10 +383,19 @@ export default {
                                     id: '323232',
                                     name: '金融贷款余额test',
                                     code: '94580eccec9a23237b49e488c10f8fa70f9c2d'
+                                },
+                                {
+                                    id: '3333',
+                                    name: 'lv-2',
+                                    code: '94580eccec9a23237b49e488c10f8fa70f9c2d11',
+                                    pcode: '94580eccec9a23237b49e488c10f8fa70f9c2d'
                                 }
                             ]);
                         }, 2000);
                     });
+                },
+                click(e, d, node, d3) {
+                    // console.log(e, d, node, d3);
                 }
             }
         };
@@ -402,7 +413,26 @@ export default {
 <style lang="scss">
 .pannel {
     position: absolute;
+    label {
+        cursor: pointer;
+    }
+    .item {
+        margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        div {
+            padding: 5px;
+        }
+    }
+}
+.document {
+    position: absolute;
+    right: 10px;
+    display: flex;
+    gap: 20px;
 }
 </style>
+
 
 ```
