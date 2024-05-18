@@ -269,12 +269,12 @@ exShaps = (nodeconfig) => [
 | 名称        | 说明                                                                            | 类型                                         |
 | ----------- | ------------------------------------------------------------------------------- | -------------------------------------------- |
 | getNodeById | 依据 数据中唯一标识 id，对应 treeOptions 中的 id， 获取对应的数据，以及元素对象 | id:string=>({ data: Object, el: d3Element }) |
-| getAllNode  | 获取所有非展开收起的节点，对应的数据，以及元素对象                                          | （）=>({ data: Object, el: d3Element }[])    |
+| getAllNode  | 获取所有非展开收起的节点，对应的数据，以及元素对象                              | （）=>({ data: Object, el: d3Element }[])    |
 
 # Demo
 
 ```javascript
- <template>
+  <template>
     <div>
         <div class="pannel">
             <div>
@@ -299,6 +299,7 @@ exShaps = (nodeconfig) => [
             <a href="https://github.com/luna-lee/moon-hierarchy" target="_blank">github地址</a>
         </div>
         <hierarchy
+            ref="hierarchy"
             :mode="mode"
             :treeData="treeData"
             :treeOptions="{ id: 'code', pId: 'pcode' }"
@@ -401,8 +402,9 @@ export default {
                         }, 2000);
                     });
                 },
-                click(e, d, node, d3) {
+                click: (e, d, node, d3) => {
                     // console.log(e, d, node, d3);
+                    console.log( this.$refs.hierarchy.getAllNode());
                 }
             }
         };
@@ -440,6 +442,7 @@ export default {
     gap: 20px;
 }
 </style>
+
 
 
 ```
