@@ -252,7 +252,6 @@ exShaps = (nodeconfig) => [
 | mouseout           | 鼠标事件                                                                                   | e:鼠标信息,d:当前节点信息,el:当前节点对应的 d3 元素对象,d3:d3 实例对象  |
 | 其他事件           | 其他事件                                                                                   | e:鼠标信息,d:当前节点信息,el:当前节点对应的 d3 元素对象,d3:d3 实例对象  |
 
-
 ### Methods
 
 | 名称        | 说明                                                                            | 类型                                         |
@@ -260,40 +259,84 @@ exShaps = (nodeconfig) => [
 | getNodeById | 依据 数据中唯一标识 id，对应 treeOptions 中的 id， 获取对应的数据，以及元素对象 | id:string=>({ data: Object, el: d3Element }) |
 | getAllNode  | 获取所有非展开收起的节点，对应的数据，以及元素对象                              | （）=>({ data: Object, el: d3Element }[])    |
 
-
-
-
 ### 各个节点，图形默认的 id 和 class
 
-| 名称                                       | class                          | id                                         |
-| ------------------------------------------ | ------------------------------ | ------------------------------------------ |
-| 节点                                       | moon-hierarchy-node            | 'node'+ 节点数据中的唯一标识字段对应的数据 |
-| 节点-展开/收起                             | moon-hierarchy-expend-button   | 'node'+ 节点数据中的唯一标识字段对应的数据 |
-| 节点-根节点                                | moon-hierarchy-node-root       | 'node'+ 节点数据中的唯一标识字段对应的数据 |
-| 节点-rect                                  | moon-hierarchy-rect            | -                                          |
-| 节点-text                                  | moon-hierarchy-text            | -                                          |
-| 节点-伸缩图形                              | moon-hierarchy-plus            | -                                          |
-| 连线                                       | moon-hierarchy-link            | 'link'+"起点 id-终点 id"                   |
-| 节点鼠标悬浮，该节点对应的所有子节点间连线 | moon-hierarchy-node-hover-link | 'link'+"起点 id-终点 id"                   |
+| 名称                                       | class                            | id                                         |
+| ------------------------------------------ | -------------------------------- | ------------------------------------------ |
+| 节点                                       | moon-hierarchy-node              | 'node'+ 节点数据中的唯一标识字段对应的数据 |
+| 节点-展开/收起                             | moon-hierarchy-node-limit-button | 'node'+ 节点数据中的唯一标识字段对应的数据 |
+| 节点-根节点                                | moon-hierarchy-node-root         | 'node'+ 节点数据中的唯一标识字段对应的数据 |
+| 节点-有子节点的节点                        | moon-hierarchy-node-haschildren  | 'node'+ 节点数据中的唯一标识字段对应的数据 |
+| 节点-有子节点的节点，且展开                | moon-hierarchy-node-expend       | 'node'+ 节点数据中的唯一标识字段对应的数据 |
+| 节点-限制展开收起的节点                    | moon-hierarchy-node-limit-button | 'node'+ 节点数据中的唯一标识字段对应的数据 |
+| rect                                       | moon-hierarchy-rect              | -                                          |
+| text                                       | moon-hierarchy-text              | -                                          |
+| 展开收起图形                               | moon-hierarchy-plus              | -                                          |
+| 连线                                       | moon-hierarchy-link              | 'link'+"起点 id-终点 id"                   |
+| 节点鼠标悬浮，该节点对应的所有子节点间连线 | moon-hierarchy-node-hover-link   | 'link'+"起点 id-终点 id"                   |
 
 ## DefaultStyle
-- 可以自行依据项目修改
+
+-   可以自行依据项目修改
+
 ```CSS
     .moon-hierarchy-node {
+        // 默认rect样式
         .moon-hierarchy-rect {
             fill: #fff;
+            stroke: rgb(216, 216, 216);
+            stroke-width: 0.5;
         }
+        // 默认text样式
+        .moon-hierarchy-text {
+            fill: rgb(51, 51, 51);
+        }
+        // 默认plus样式
+        .moon-hierarchy-plus {
+            stroke: rgb(153, 153, 153);
+            fill: rgb(234, 242, 255);
+            stroke-width: 1;
+        }
+        // 根节点样式
         &.moon-hierarchy-node-root {
             .moon-hierarchy-rect {
                 fill: rgb(18, 137, 239);
             }
+            .moon-hierarchy-text {
+                fill: #fff;
+            }
+            .moon-hierarchy-plus {
+                display: none;
+            }
         }
-        &.moon-hierarchy-expend-button {
+        // 没有子节点的样式
+        &:not(.moon-hierarchy-node-haschildren) {
+            .moon-hierarchy-plus {
+                display: none;
+            }
+        }
+        // 非根节点的节点展开后样式
+        &.moon-hierarchy-node-expend:not(.moon-hierarchy-node-root) {
+            .moon-hierarchy-text {
+                fill: rgb(18, 139, 237);
+            }
+        }
+        // 节点展开后样式
+        &.moon-hierarchy-node-expend {
+            .moon-hierarchy-plus {
+                line:nth-of-type(2) {
+                    display: none;
+                }
+            }
+        }
+        //展开限制节点的按钮型节点样式
+        &.moon-hierarchy-node-limit-button {
             .moon-hierarchy-rect {
                 fill: rgb(247, 247, 247);
             }
         }
-        &:not(.moon-hierarchy-expend-button):hover {
+        // 非展开限制节点的按钮型节点得节点鼠标悬停样式
+        &:not(.moon-hierarchy-node-limit-button):hover {
             .moon-hierarchy-rect {
                 stroke: rgb(18, 137, 239);
             }
@@ -329,7 +372,6 @@ exShaps = (nodeconfig) => [
             stroke-dasharray: 20, 5;
         }
     }
-
 ```
 
 # Demo
