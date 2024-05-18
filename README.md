@@ -264,6 +264,13 @@ exShaps = (nodeconfig) => [
 | 连线                                       | moon-hierarchy-link            | 'link'+"起点 id-终点 id"                   |
 | 节点鼠标悬浮，该节点对应的所有子节点间连线 | moon-hierarchy-node-hover-link | 'link'+"起点 id-终点 id"                   |
 
+### Methods
+
+| 名称        | 说明                                                                            | 类型                                         |
+| ----------- | ------------------------------------------------------------------------------- | -------------------------------------------- |
+| getNodeById | 依据 数据中唯一标识 id，对应 treeOptions 中的 id， 获取对应的数据，以及元素对象 | id:string=>({ data: Object, el: d3Element }) |
+| getAllNode  | 获取所有非展开收起的节点，对应的数据，以及元素对象                                          | （）=>({ data: Object, el: d3Element }[])    |
+
 # Demo
 
 ```javascript
