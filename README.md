@@ -29,7 +29,6 @@
 | treeOptions      | 树数据选项                                                                                   | Object                | -       | { id: 'id',pId: 'pId',name: 'name',} |
 | defaultOpenLevel | 默认展开层级，-1 时全部展开                                                                  | Number                | -1 ，1+ | 2                                    |
 | negativeIds      | 蝴蝶模型，指定负向数据对应的 id，必须是根节点的直接子节点                                    | Array                 | -       | []                                   |
-| listener         | 节点监听 ，详情见下方说明                                                                    | Object                | -       | {}                                   |
 | config           | 配置节点连线，详情见下方说明                                                                 | Object                | -       | {}                                   |
 | canExpendFold    | 点击当前节点，展开和收缩子节点 ,传入函数，则接受当前节点数据，返回一个 boolean               | Boolean, (d)=>boolean | -       | true                                 |
 | expendShape      | 指定点击展开的元素，必须同时设置 foldShape 才起作用，可以是 id，class 或元素,默认整个节点    | string                | -       | -                                    |
@@ -49,6 +48,7 @@
 | 参数       | 说明                                                                                    | 默认值     |
 | ---------- | --------------------------------------------------------------------------------------- | ---------- |
 | attrs      | 设置节点除 id，transform 其他的所有属性                                                 | -          |
+| on         | 节点监听 ，详情见下方说明                                                               | Object     |
 | padding    | 内容区域到边框的距离，详情见下                                                          | h:15,v:10  |
 | nodeWidth  | 布局的节点宽度，水平模式，实际的节点宽度依据内容确定。在数据 data.\_nodeConfig 中可查看 | h:60,v:168 |
 | nodeHeight | 布局的节点高度,水平模式，实际的节点高度，还会加上 padding 值                            | h:16,v:68  |
@@ -243,15 +243,21 @@ exShaps = [
 | scaleRange   | 可缩放范围                 | [0.2,2] |
 | callback     | 缩放回到函数，接受缩放参数 | -       |
 
-### listener 节点监听
+### node.on 节点监听
 
 | 名称               | 说明                                                                                       | 参数                                                                    |
 | ------------------ | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
 | clickFetchChildren | 点击后异步加载子节点。父节点上需要有\_hasChildren 标记 ,返回一个数组，可以是层级结构的数据 | data:当前节点源数据信息 ,el:当前节点对应的 d3 元素对象,d3:d3 实例对象   |
-| click              | 鼠标事件                                                                                   | e:鼠标信息,d:当前节点信息,el:当前节点对应的 d3 元素对象,d3:d3 实例对象  |
+| click              | 鼠标事件,禁止冒泡                                                                          | e:鼠标信息,d:当前节点信息,el:当前节点对应的 d3 元素对象,d3:d3 实例对象  |
 | mouseover          | 鼠标事件                                                                                   | e:鼠标信息,d:当前节点信息 ,el:当前节点对应的 d3 元素对象,d3:d3 实例对象 |
 | mouseout           | 鼠标事件                                                                                   | e:鼠标信息,d:当前节点信息,el:当前节点对应的 d3 元素对象,d3:d3 实例对象  |
 | 其他事件           | 其他事件                                                                                   | e:鼠标信息,d:当前节点信息,el:当前节点对应的 d3 元素对象,d3:d3 实例对象  |
+
+### Events
+
+| 名称  | 说明                                                 | 参数       |
+| ----- | ---------------------------------------------------- | ---------- |
+| graph | 获取当前画布 D3 对象，可以挂载监听，修改属性等操作。 | D3Selector |
 
 ### Methods
 
@@ -261,6 +267,7 @@ exShaps = [
 | getAllNode   | 获取所有非展开收起的节点，对应的数据，以及元素对象                              | （）=>({ data: Object, el: d3Element }[])    |
 | moveToCenter | 移动到中点                                                                      | ()=>{}                                       |
 | zoom         | 缩放画布， 大于 1 的为放大，小于 1 大于 0 的为缩小。不支持负数                  | （scale:number）=>{}                         |
+| addNode      | 新增子节点 ,nodeList 可以是一个扁平树数据。                                     | （targetId,nodeList)=>{}                     |
 
 ### 各个节点，图形默认的 id 和 class
 
@@ -384,13 +391,14 @@ exShaps = [
 # Demo
 
 ```javascript
- <template>
+  <template>
     <div>
         <div class="pannel">
             <div>
                 <button @click="$refs.hierarchy.moveToCenter()">移动到中心</button>
                 <button @click="$refs.hierarchy.zoom(1.5)">放大</button>
                 <button @click="$refs.hierarchy.zoom(0.5)">缩小</button>
+                <button @click="addNew()">添加新节点</button>
             </div>
             <div style="margin-top: 10px">
                 <input type="radio" id="h" value="h" v-model="mode" />
@@ -420,10 +428,10 @@ exShaps = [
             :treeOptions="{ id: 'code', pId: 'pcode' }"
             :layout="layout"
             :negativeIds="['qydak', 'root1', 'root2', 'root3']"
-            :listener="listener"
             :config="config"
             :width="width"
             :height="height"
+            @graph="getGraph"
         ></hierarchy>
     </div>
 </template>
@@ -462,6 +470,61 @@ export default {
             height: 0,
             config: {
                 node: {
+                    on: {
+                        clickFetchChildren: (data, node, d3) => {
+                            console.log(data, node, d3);
+                            return new Promise((r) => {
+                                setTimeout(() => {
+                                    r([
+                                        {
+                                            id: '32323',
+                                            name: '金融贷款余额test',
+                                            code: '980eccec9a23237b49e488c10f8fa70f9c2d'
+                                        },
+                                        {
+                                            id: '3233',
+                                            name: '金融贷款余额test',
+                                            code: '980444eccec9a23237b49e488c10f8fa70f9c2d'
+                                        },
+                                        {
+                                            id: '323243333',
+                                            name: '金融贷款余额test',
+                                            code: '1980eccec9a23237b49e488c10f8fa70f9c2d'
+                                        },
+                                        {
+                                            id: '323323',
+                                            name: '金融贷款余额test',
+                                            code: '2980eccec9a23237b49e488c10f8fa70f9c2d'
+                                        },
+                                        {
+                                            id: '323223',
+                                            name: '金融贷款余额test',
+                                            code: '3980eccec9a23237b49e488c10f8fa70f9c2d'
+                                        },
+                                        {
+                                            id: '323123',
+                                            name: '金融贷款余额test',
+                                            code: '480eccec9a23237b49e488c10f8fa70f9c2d'
+                                        },
+                                        {
+                                            id: '323232',
+                                            name: '金融贷款余额test',
+                                            code: '94580eccec9a23237b49e488c10f8fa70f9c2d'
+                                        },
+                                        {
+                                            id: '3333',
+                                            name: 'lv-2',
+                                            code: '94580eccec9a23237b49e488c10f8fa70f9c2d11',
+                                            pcode: '94580eccec9a23237b49e488c10f8fa70f9c2d'
+                                        }
+                                    ]);
+                                }, 2000);
+                            });
+                        },
+                        click: (e, d, node, d3) => {
+                            console.log(e, d, node, d3);
+                        }
+                    },
                     exShaps: [
                         {
                             name: 'text',
@@ -471,7 +534,9 @@ export default {
                                 },
                                 'font-size': 19,
                                 transform: (d) => {
-                                    return `translate(${d.data._nodeConfig.nodeWidth},${d.data._nodeConfig.nodeHeight / 2})`;
+                                    return d.data._sign == 1
+                                        ? `translate(${d.data._nodeConfig.nodeWidth},${d.data._nodeConfig.nodeHeight / 2 + 5})`
+                                        : `translate(-20,${d.data._nodeConfig.nodeHeight / 2 + 5})`;
                                 }
                             },
                             compose: {
@@ -488,61 +553,6 @@ export default {
                 arrow: {
                     // show: false
                 }
-            },
-            listener: {
-                clickFetchChildren: (data, node, d3) => {
-                    console.log(data, node, d3);
-                    return new Promise((r) => {
-                        setTimeout(() => {
-                            r([
-                                {
-                                    id: '32323',
-                                    name: '金融贷款余额test',
-                                    code: '980eccec9a23237b49e488c10f8fa70f9c2d'
-                                },
-                                {
-                                    id: '3233',
-                                    name: '金融贷款余额test',
-                                    code: '980444eccec9a23237b49e488c10f8fa70f9c2d'
-                                },
-                                {
-                                    id: '323243333',
-                                    name: '金融贷款余额test',
-                                    code: '1980eccec9a23237b49e488c10f8fa70f9c2d'
-                                },
-                                {
-                                    id: '323323',
-                                    name: '金融贷款余额test',
-                                    code: '2980eccec9a23237b49e488c10f8fa70f9c2d'
-                                },
-                                {
-                                    id: '323223',
-                                    name: '金融贷款余额test',
-                                    code: '3980eccec9a23237b49e488c10f8fa70f9c2d'
-                                },
-                                {
-                                    id: '323123',
-                                    name: '金融贷款余额test',
-                                    code: '480eccec9a23237b49e488c10f8fa70f9c2d'
-                                },
-                                {
-                                    id: '323232',
-                                    name: '金融贷款余额test',
-                                    code: '94580eccec9a23237b49e488c10f8fa70f9c2d'
-                                },
-                                {
-                                    id: '3333',
-                                    name: 'lv-2',
-                                    code: '94580eccec9a23237b49e488c10f8fa70f9c2d11',
-                                    pcode: '94580eccec9a23237b49e488c10f8fa70f9c2d'
-                                }
-                            ]);
-                        }, 2000);
-                    });
-                },
-                click: (e, d, node, d3) => {
-                    console.log(e, d, node, d3);
-                }
             }
         };
     },
@@ -552,6 +562,23 @@ export default {
         setWidthHeight() {
             this.width = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) - 10;
             this.height = (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight) - 30;
+        },
+        addNew() {
+            this.$refs.hierarchy.addNode('root', [
+                {
+                    id: 'new' + new Date().getTime(),
+                    name: '企业信息' + 'new' + new Date().getTime(),
+                    code: 'new' + new Date().getTime(),
+                    modelType: '',
+                    domainId: '',
+                    pcode: 'root'
+                }
+            ]);
+        },
+        getGraph(svg) {
+            svg.on('click', () => {
+                console.log('这是画布');
+            });
         }
     }
 };
@@ -579,4 +606,5 @@ export default {
     gap: 20px;
 }
 </style>
+
 ```
