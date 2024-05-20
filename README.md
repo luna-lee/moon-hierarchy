@@ -46,16 +46,17 @@
 
 ### node 配置
 
-| 参数       | 说明                           | 默认值     |
-| ---------- | ------------------------------ | ---------- |
-| padding    | 内容区域到边框的距离，详情见下 | h:15,v:10  |
-| nodeWidth  | 节点宽度                       | h:60,v:168 |
-| nodeHeight | 节点高度                       | h:-,v:68   |
-| separation | 节点间距                       | 1.5        |
-| rect       | 矩形配置                       | -          |
-| text       | 文本配置                       | -          |
-| plus       | 折叠图标配置                   | -          |
-| exShaps    | 自定义图型配置,                | () => []   |
+| 参数       | 说明                                    | 默认值          |
+| ---------- | --------------------------------------- | --------------- |
+| attrs      | 设置节点除 id，transform 其他的所有属性 | -               |
+| padding    | 内容区域到边框的距离，详情见下          | h:15,v:10       |
+| nodeWidth  | 节点宽度                                | h:60,v:168      |
+| nodeHeight | 节点高度                                | h:自动依据padding与text的font-size计算,v:68 |
+| separation | 节点间距                                | 1.5             |
+| rect       | 矩形配置                                | -               |
+| text       | 文本配置                                | -               |
+| plus       | 折叠图标配置                            | -               |
+| exShaps    | 自定义图型配置,                         | []              |
 
 ### padding
 
@@ -79,10 +80,10 @@ type=[number,number,number,number]|number|(d)=>{return [number,number,number,num
 }
 ```
 
-| 参数  | 说明                                               | 默认值                                                                               |
-| ----- | -------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| attrs | 组件样式配置                                       | { attrs:{stroke: '#D4B106',fill: 'rgba(0,0,0,0)','stroke-width': '0.5',} ,show:true} |
-| show  | 是否显示，设置为 false 后可以通过 exShaps 自己指定 | true                                                                                 |
+| 参数  | 说明                                               | 默认值                  |
+| ----- | -------------------------------------------------- | ----------------------- |
+| attrs | 组件样式配置                                       | { attrs:{ } ,show:true} |
+| show  | 是否显示，设置为 false 后可以通过 exShaps 自己指定 | true                    |
 
 ### text 默认组件
 
@@ -97,10 +98,10 @@ type=[number,number,number,number]|number|(d)=>{return [number,number,number,num
 }
 ```
 
-| 参数  | 说明                                               | 默认值                                                                                                               |
-| ----- | -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| attrs | 组件配置                                           | v:{font-size:16,line-height:10} h:{font-size:10} fill: d =>d.data.children ? 'rgb(18, 139, 237)' : 'rgb(51, 51, 51)' |
-| show  | 是否显示，设置为 false 后可以通过 exShaps 自己指定 | true                                                                                                                 |
+| 参数  | 说明                                               | 默认值                                           |
+| ----- | -------------------------------------------------- | ------------------------------------------------ |
+| attrs | 组件配置                                           | v:{font-size:16,line-height:10} h:{font-size:10} |
+| show  | 是否显示，设置为 false 后可以通过 exShaps 自己指定 | true                                             |
 
 ### plus 默认组件
 
@@ -114,20 +115,19 @@ type=[number,number,number,number]|number|(d)=>{return [number,number,number,num
 }
 ```
 
-| 参数  | 说明                                               | 默认值                                                                                      |
-| ----- | -------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| attrs | 组件配置                                           | { r: v:10;h:6,stroke: 'rgb(153, 153, 153)', fill: ' rgb(234, 242, 255)', 'stroke-width': 1} |
-| show  | 是否显示，设置为 false 后可以通过 exShaps 自己指定 | true                                                                                        |
+| 参数  | 说明                                               | 默认值         |
+| ----- | -------------------------------------------------- | -------------- |
+| attrs | 组件配置                                           | { r: v:10;h:6} |
+| show  | 是否显示，设置为 false 后可以通过 exShaps 自己指定 | true           |
 
 ### exShaps 图形配置
 
--   一个函数，返回一个图形数组。参数为节点所有配置信息 nodeconfig
--   每个图形，若指定了 class ，会在每次更新时触发整个节点的重新渲染。这在动态设置属性时很有用。
+-   一个图形数组。
 -   图形嵌套，通过指定 children 实现
 -   具体配置如下：
 
 ```javascript
-exShaps = (nodeconfig) => [
+exShaps = [
     {
         name: 'g',
         // 属性配置
@@ -181,10 +181,11 @@ exShaps = (nodeconfig) => [
 {
 "data": {
 ...业务数据
-"_hasChildren": true, //子节点判断标记
+"_hasChildren": true, //异步加载子节点时，父节点中的判断标记
 "_sign": 1, //不同模型下，上下，左右标记。 左、上：-1。 右，下：1
-"_nodeWidth": 168, //当前节点宽度
-"_name": []
+"_nodeConfig": object, //当前节点配置信息。包含节点的高度宽度形状等信息。
+"_isexpend":false,//水平模式下，限制节点按钮的展开闭合状态，只有限制节点按钮才有
+"_name": []  //垂直模式下，文本的多行节点信息
 },
 "x": 126, //节点坐标
 "y": 136 //节点坐标
@@ -204,11 +205,11 @@ exShaps = (nodeconfig) => [
 }
 ```
 
-| 参数  | 说明             | 默认值                                                                                                                             |
-| ----- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| attrs | 箭头 marker 配置 | { viewBox: '0 0 10 10', refX: '10', refY: '5', markerWidth: '6', markerHeight: '6', fill: '#128BED', orient: 'auto-start-reverse'} |
-| path  | path d 配置      | d:’M 0 0 L 10 5 L 0 10 z‘                                                                                                          |
-| show  | 是否显示         | true                                                                                                                               |
+| 参数  | 说明             | 默认值                                                                                                            |
+| ----- | ---------------- | ----------------------------------------------------------------------------------------------------------------- |
+| attrs | 箭头 marker 配置 | { viewBox: '0 0 10 10', refX: '10', refY: '5', markerWidth: '6', markerHeight: '6', orient: 'auto-start-reverse'} |
+| path  | path d 配置      | d:’M 0 0 L 10 5 L 0 10 z‘                                                                                         |
+| show  | 是否显示         | true                                                                                                              |
 
 ### link 连线配置
 
@@ -281,6 +282,7 @@ exShaps = (nodeconfig) => [
 -   可以自行依据项目修改
 
 ```CSS
+     .moon-hierarchy-svg {
     .moon-hierarchy-node {
         // 默认rect样式
         .moon-hierarchy-rect {
@@ -343,6 +345,9 @@ exShaps = (nodeconfig) => [
             }
         }
     }
+    .moon-hierarchy-arrow {
+        fill: #128bed;
+    }
     .moon-hierarchy-link {
         stroke: #d8d8d8;
         stroke-opacity: 1;
@@ -373,15 +378,21 @@ exShaps = (nodeconfig) => [
             stroke-dasharray: 20, 5;
         }
     }
+}
 ```
 
 # Demo
 
 ```javascript
-  <template>
+ <template>
     <div>
         <div class="pannel">
             <div>
+                <button @click="$refs.hierarchy.moveToCenter()">移动到中心</button>
+                <button @click="$refs.hierarchy.zoom(1.5)">放大</button>
+                <button @click="$refs.hierarchy.zoom(0.5)">缩小</button>
+            </div>
+            <div style="margin-top: 10px">
                 <input type="radio" id="h" value="h" v-model="mode" />
                 <label for="h">水平模式</label>
                 <input type="radio" id="v" value="v" v-model="mode" />
@@ -399,7 +410,7 @@ exShaps = (nodeconfig) => [
             </div>
         </div>
         <div class="document">
-            <router-link to="/md-view" target="_blank">文档</router-link>
+            <!-- <router-link to="/md-view" target="_blank">文档</router-link> -->
             <a href="https://github.com/luna-lee/moon-hierarchy" target="_blank">github地址</a>
         </div>
         <hierarchy
@@ -450,9 +461,32 @@ export default {
             width: 0,
             height: 0,
             config: {
-                node: {},
+                node: {
+                    exShaps: [
+                        {
+                            name: 'text',
+                            attrs: {
+                                fill: (d) => {
+                                    if (d.data.children?.length) return 'red';
+                                },
+                                'font-size': 19,
+                                transform: (d) => {
+                                    return `translate(${d.data._nodeConfig.nodeWidth},${d.data._nodeConfig.nodeHeight / 2})`;
+                                }
+                            },
+                            compose: {
+                                text(d) {
+                                    if (typeof d.data._isexpend == 'boolean') {
+                                        return d.data._isexpend ? '🤩' : '🤓';
+                                    }
+                                    return d.data?.children?.length ? '😝' : '😃';
+                                }
+                            }
+                        }
+                    ]
+                },
                 arrow: {
-                    show: false
+                    // show: false
                 }
             },
             listener: {
@@ -507,8 +541,7 @@ export default {
                     });
                 },
                 click: (e, d, node, d3) => {
-                    // console.log(e, d, node, d3);
-                    console.log( this.$refs.hierarchy.getAllNode());
+                    console.log(e, d, node, d3);
                 }
             }
         };
@@ -546,7 +579,4 @@ export default {
     gap: 20px;
 }
 </style>
-
-
-
 ```
