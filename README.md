@@ -309,6 +309,7 @@ exShaps = [
 | continueZoom | 启动缩放功能 | ()=>void |
 | showCustomView | 显示slot对应的自定义的view视图,e:鼠标信息，d：布局节点信息，width：视图宽度，height：视图高度，priority：相对于布局节点，视图优先出现位置,rb右下，rt右上，lb左下，lt左上 | (e, d, width, height, priority:['rb', 'rt', 'lb', 'lt'])=>void |
 | hiddenCustomView | 隐藏slot对应的自定义的view视图, | ()=>void |
+| expendToNode | 展开到指定节点所在的层级 | (targetNodeId:string)=>void |
 
 
 
@@ -445,7 +446,7 @@ exShaps = [
 # Demo
 
 ```javascript
-   <template>
+    <template>
     <div>
         <div class="pannel">
             <div>
@@ -454,6 +455,7 @@ exShaps = [
                 <button @click="$refs.hierarchy.zoom(0.5)">缩小</button>
                 <button @click="$refs.hierarchy.pauseZoom()">暂停缩放</button>
                 <button @click="$refs.hierarchy.continueZoom()">恢复缩放</button>
+                <button @click="$refs.hierarchy.expendToNode('qyfxsbpggl')">展示到指定节点</button>
             </div>
             <div style="margin-top: 10px">
                 <input type="radio" id="h" value="h" v-model="mode" />
@@ -588,7 +590,7 @@ export default {
                             });
                         },
                         click: (e, d, node, svg) => {
-                            // console.log(e, d, node, svg);
+                            console.log(e, d, node, svg);
                             this.$refs.hierarchy.hiddenCustomView();
                         },
                         contextmenu: (e, d, node, svg) => {
@@ -719,5 +721,6 @@ export default {
     box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
 }
 </style>
+
 
 ```
