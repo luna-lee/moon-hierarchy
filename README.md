@@ -237,10 +237,11 @@ exShaps = [
 
 #### Props.config.customView 自定视图配置
 
-| 参数   | 说明     | 默认值 |
-| ------ | -------- | ------ |
-| width  | 视图宽度 | 100    |
-| height | 视图高度 | 50     |
+| 参数     | 说明                                                         | 默认值                   |
+| -------- | ------------------------------------------------------------ | ------------------------ |
+| width    | 视图宽度                                                     | 100                      |
+| height   | 视图高度                                                     | 50                       |
+| priority | 相对于布局节点，视图优先出现位置,rb右下，rt右上，lb左下，lt左上 | ['rb', 'rt', 'lb', 'lt'] |
 
 
 
@@ -307,7 +308,7 @@ exShaps = [
 | removeNodeById | 依据节点 id，移除该节点以及其所有子节点。 | (id:string\|string[])=>void |
 | pauseZoom | 暂停缩放功能 | ()=>void |
 | continueZoom | 启动缩放功能 | ()=>void |
-| showCustomView | 显示slot对应的自定义的view视图,e:鼠标信息，d：布局节点信息，width：视图宽度，height：视图高度，priority：相对于布局节点，视图优先出现位置,rb右下，rt右上，lb左下，lt左上 | (e, d, width, height, priority:['rb', 'rt', 'lb', 'lt'])=>void |
+| showCustomView | 显示slot对应的自定义的view视图,e:鼠标信息，d：布局节点信息，width，height，priority：参考config.customView，优先级高于config.customView中的配置 | (e, d, width, height, priority:['rb', 'rt', 'lb', 'lt'])=>void |
 | hiddenCustomView | 隐藏slot对应的自定义的view视图, | ()=>void |
 | expendToNode | 展开到指定节点所在的层级 | (targetNodeId:string)=>void |
 
