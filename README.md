@@ -27,7 +27,7 @@
 | mode             | 渲染模式：水平方向 h，垂直方向 v                             | String                | h,v     | h                                    |
 | layout           | 布局：水平方向-左右，右左，蝴蝶，垂直->上下，下上，蝴蝶      | String                | -       | tb/bt/bf, lr/rl/bf                   |
 | limit            | 水平模式，子节点最大展示数，多余的出收起按钮 ，-1 时全部展出 | Number                | -1；1+  | 3                                    |
-| treeData         | 扁平化树数据                                                 | Array                 | -       | []                                   |
+| treeData         | 扁平化树数据，外部修改后，会触发画布重绘。但内置新增、修改、删除方法不会触发重绘，且会修改treeData数据 | Array                 | -       | []                                   |
 | treeOptions      | 树数据选项                                                   | Object                | -       | { id: 'id',pId: 'pId',name: 'name',} |
 | duration         | 动画过渡时间                                                 | Number                |         | 400                                  |
 | defaultOpenLevel | 默认展开层级，-1 时全部展开                                  | Number                | -1 ，1+ | 2                                    |
@@ -305,9 +305,9 @@ exShaps = [
 | getAllNode | 获取所有非展开收起的节点，对应的数据，以及元素对象 | (id:string)=>({ data: Object, el: d3Element }[]) |
 | moveToCenter | 移动到中点 | ()=>void |
 | zoom | 缩放画布，  大于 1 的为放大，小于 1 大于 0 的为缩小。负数无效 | (scale:number)=>void |
-| addNode | 在targetId对应目标节点上新增子节点 ,childrenNode 是一个扁平树数据。 \_sign 当目标节点为根节点且为 bf 布局时，用于指定添加的方位。 | (targetId,childrenNode,\_sign)=>void |
-| updateNodeByData | 更新节点对应业务数据。但不能更改组件数据，如id，pId，children，"_"开头的属性 | (dataList:object\|object[])=>void |
-| removeNodeById | 依据节点 id，移除该节点以及其所有子节点。 | (id:string\|string[])=>void |
+| addNode | 在targetId对应目标节点上新增子节点 ,childrenNode 是一个扁平树数据也可以是单个对象数据。 \_sign 当目标节点为根节点且为 bf 布局时，用于指定添加的方位。会修改treeData数据 | (targetId,childrenNode:object[]|
+| updateNodeByData | 更新节点对应业务数据。但不能更改组件数据，如id，pId，children，"_"开头的属性。会修改treeData数据 | (dataList:object\|object[])=>void |
+| removeNodeById | 依据节点 id，移除该节点以及其所有子节点。会修改treeData数据 | (id:string\|string[])=>void |
 | pauseZoom | 暂停缩放功能 | ()=>void |
 | continueZoom | 启动缩放功能 | ()=>void |
 | showCustomView | 显示slot对应的自定义的view视图,e:鼠标信息，d：布局节点信息，width，height，priority，duration：参考config.customView，优先级高于config.customView中的配置。 | (e, d, width, height, priority,duration)=>void |
