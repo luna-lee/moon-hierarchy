@@ -29,6 +29,7 @@
 | limit            | 水平模式，子节点最大展示数，多余的出收起按钮 ，-1 时全部展出 | Number                | -1；1+  | 3                                    |
 | treeData         | 扁平化树数据                                                 | Array                 | -       | []                                   |
 | treeOptions      | 树数据选项                                                   | Object                | -       | { id: 'id',pId: 'pId',name: 'name',} |
+| duration         | 动画过渡时间                                                 | Number                |         | 400                                  |
 | defaultOpenLevel | 默认展开层级，-1 时全部展开                                  | Number                | -1 ，1+ | 2                                    |
 | negativeIds      | 蝴蝶模型，指定负向数据对应的 id，必须是根节点的直接子节点    | Array                 | -       | []                                   |
 | config           | 配置节点连线，详情见下方说明                                 | Object                | -       | {}                                   |
@@ -242,6 +243,7 @@ exShaps = [
 | width    | 视图宽度                                                     | 100                      |
 | height   | 视图高度                                                     | 50                       |
 | priority | 相对于布局节点，视图优先出现位置,rb右下，rt右上，lb左下，lt左上 | ['rb', 'rt', 'lb', 'lt'] |
+| duration | 动画过渡时间，默认props.duration中的值                       | 400                      |
 
 
 
@@ -308,7 +310,7 @@ exShaps = [
 | removeNodeById | 依据节点 id，移除该节点以及其所有子节点。 | (id:string\|string[])=>void |
 | pauseZoom | 暂停缩放功能 | ()=>void |
 | continueZoom | 启动缩放功能 | ()=>void |
-| showCustomView | 显示slot对应的自定义的view视图,e:鼠标信息，d：布局节点信息，width，height，priority：参考config.customView，优先级高于config.customView中的配置 | (e, d, width, height, priority:['rb', 'rt', 'lb', 'lt'])=>void |
+| showCustomView | 显示slot对应的自定义的view视图,e:鼠标信息，d：布局节点信息，width，height，priority，duration：参考config.customView，优先级高于config.customView中的配置。 | (e, d, width, height, priority,duration)=>void |
 | hiddenCustomView | 隐藏slot对应的自定义的view视图, | ()=>void |
 | expendToNode | 展开到指定节点所在的层级 | (targetNodeId:string)=>void |
 
@@ -484,7 +486,7 @@ exShaps = [
             ref="hierarchy"
             :mode="mode"
             :treeData="treeData"
-            :treeOptions="{ id: 'code', pId: 'pcode' }"
+            :treeOptions="treeOptions"
             :layout="layout"
             :negativeIds="['qydak', 'root1', 'root2', 'root3']"
             :config="config"
@@ -535,6 +537,7 @@ export default {
             layout: 'bf',
             treeData: [],
             currentNode: {},
+            treeOptions: { id: 'code', pId: 'pcode' },
             width: 0,
             height: 0,
             config: {
@@ -664,7 +667,7 @@ export default {
         },
         onAdd() {
             this.$refs.hierarchy.addNode(
-                this.currentNode.code,
+                this.currentNode[this.treeOptions.id],
                 [
                     {
                         id: 'new' + new Date().getTime(),
@@ -672,14 +675,14 @@ export default {
                         code: 'new' + new Date().getTime(),
                         modelType: '',
                         domainId: '',
-                        pcode: this.currentNode.code
+                        pcode: this.currentNode[this.treeOptions.id]
                     }
                 ],
                 -1
             );
         },
         onRemove() {
-            this.$refs.hierarchy.removeNodeById(this.currentNode.code);
+            this.$refs.hierarchy.removeNodeById(this.currentNode[this.treeOptions.id]);
         },
         onUpdate() {
             this.$refs.hierarchy.updateNodeByData({ ...this.currentNode, name: 'hello', children: [] });
