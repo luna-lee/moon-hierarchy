@@ -1,6 +1,6 @@
 {
   "name": "moon-hierarchy",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "",
   "main": "./dist/moon-hierarchy.umd.min.js",
   "module": "./dist/moon-hierarchy.umd.min.js",
