@@ -65,13 +65,13 @@
 - #### node.on 节点监听
 
 
-| 名称               | 说明                                                         | 类型                                                  |
-| ------------------ | ------------------------------------------------------------ | ----------------------------------------------------- |
-| clickFetchChildren | 点击后异步加载子节点。父节点上需要有\_hasChildren 标记 ,返回一个数组，可以是层级结构的数据。data:当前节点源数据信息；el:当前节点对应的 d3 元素对象；svg:画布元素 | (data:treeData,el:d3Element,svg:d3Element)=>object[]  |
-| click              | 鼠标事件,禁止冒泡;                                           | (e:MouseEvent,d:d3LayoutData,svg:d3Element)=>object[] |
-| mouseover          | 鼠标事件                                                     | (e:MouseEvent,d:d3LayoutData,svg:d3Element)=>object[] |
-| mouseout           | 鼠标事件                                                     | (e:MouseEvent,d:d3LayoutData,svg:d3Element)=>object[] |
-| 其他事件           | 其他事件                                                     | (e:MouseEvent,d:d3LayoutData,svg:d3Element)=>object[] |
+| 名称               | 说明                                                         | 类型                                                         |
+| ------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| clickFetchChildren | 点击后异步加载子节点。父节点上需要有\_hasChildren 标记 ,返回一个数组，可以是层级结构的数据。data:当前节点源数据信息；el:当前节点对应的 d3 元素对象；svg:画布元素 | (data:treeData,el:d3Element,svg:d3Element)=>object[]\|object |
+| click              | 鼠标事件,禁止冒泡;                                           | (e:MouseEvent,d:d3LayoutData,svg:d3Element)=>object[]        |
+| mouseover          | 鼠标事件                                                     | (e:MouseEvent,d:d3LayoutData,svg:d3Element)=>object[]        |
+| mouseout           | 鼠标事件                                                     | (e:MouseEvent,d:d3LayoutData,svg:d3Element)=>object[]        |
+| 其他事件           | 其他事件                                                     | (e:MouseEvent,d:d3LayoutData,svg:d3Element)=>object[]        |
 
 ### 
 
@@ -312,7 +312,7 @@ exShaps = [
 | continueZoom | 启动缩放功能 | ()=>void |
 | showCustomView | 显示slot对应的自定义的view视图,e:鼠标信息，d：布局节点信息，width，height，priority，duration：参考config.customView，优先级高于config.customView中的配置。 | (e, d, width, height, priority,duration)=>void |
 | hiddenCustomView | 隐藏slot对应的自定义的view视图, | ()=>void |
-| expendToNode | 展开到指定节点所在的层级 | (targetNodeId:string)=>void |
+| expendToNode | 展开到指定节点所在的层级,eventList指定触发节点事件 | (targetNodeId:string,eventList:string[]\|string)=>void |
 
 
 
