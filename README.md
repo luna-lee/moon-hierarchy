@@ -312,7 +312,7 @@ exShaps = [
 | continueZoom | 启动缩放功能 | ()=>void |
 | showCustomView | 显示slot对应的自定义的view视图,e:鼠标信息，d：布局节点信息，width，height，priority，duration：参考config.customView，优先级高于config.customView中的配置。 | (e, d, width, height, priority,duration)=>void |
 | hiddenCustomView | 隐藏slot对应的自定义的view视图, | ()=>void |
-| expendToNode | 展开到指定节点所在的层级,eventList指定触发节点事件 | (targetNodeId:string,eventList:string[]\|string)=>void |
+| expendToNode | 展开到指定节点所在的层级,eventList指定触发节点事件。move事件将画布移动到指定节点。 | (targetNodeId:string,eventList:string[]\|string)=>void |
 
 
 
