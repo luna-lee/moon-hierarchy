@@ -449,7 +449,7 @@ exShaps = [
 # Demo
 
 ```javascript
-    <template>
+   <template>
     <div>
         <div class="pannel">
             <div>
@@ -484,6 +484,7 @@ exShaps = [
 
         <hierarchy
             ref="hierarchy"
+            class="moon-hierarchy"
             :mode="mode"
             :treeData="treeData"
             :treeOptions="treeOptions"
@@ -494,10 +495,12 @@ exShaps = [
             :height="height"
             @draw-done="onDrawDone"
         >
-            <div class="contextmenu">
-                <button @click="onAdd">新增</button>
-                <button @click="onRemove">移除</button>
-                <button @click="onUpdate">更新数据</button>
+            <div>
+                <ul>
+                    <li class="contentmenu-item" @click="onAdd">新增子节点</li>
+                    <li class="contentmenu-item" @click="onRemove">删除节点</li>
+                    <li class="contentmenu-item" @click="onUpdate">更新数据</li>
+                </ul>
             </div>
         </hierarchy>
     </div>
@@ -593,8 +596,11 @@ export default {
                                 }, 2000);
                             });
                         },
-                        click: (e, d, node, svg) => {
-                            console.log(e, d, node, svg);
+                        click: (e, d, el, svg) => {
+                            if (typeof d.data._isexpend == 'boolean') return;
+                            svg.selectAll('.active-node').classed('active-node', false);
+                            el.classed('active-node', true);
+                            this.$emit('node-click', d.data);
                             this.$refs.hierarchy.hiddenCustomView();
                         },
                         contextmenu: (e, d, node, svg) => {
@@ -630,7 +636,8 @@ export default {
                 },
                 customView: {
                     width: 120,
-                    height: 100
+                    height: 110,
+                    duration: 400
                 },
                 arrow: {
                     // show: false
@@ -690,7 +697,95 @@ export default {
     }
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
+.moon-hierarchy {
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        border: 1px solid;
+    }
+    li {
+        display: list-item;
+        text-align: -webkit-match-parent;
+        unicode-bidi: isolate;
+    }
+    .contentmenu-item {
+        font-size: 14px;
+        position: relative;
+        white-space: nowrap;
+        overflow: hidden;
+        color: #606266;
+        height: 34px;
+        line-height: 34px;
+        box-sizing: border-box;
+        cursor: pointer;
+        &:hover {
+            background-color: #f5f7fa;
+        }
+    }
+    ::v-deep(.moon-hierarchy-node-root) {
+        .moon-hierarchy-rect {
+            fill: #003bc1;
+        }
+    }
+    ::v-deep(.moon-hierarchy-link) {
+        stroke: #1961f5;
+        stroke-opacity: 1;
+        stroke-width: 1.3;
+    }
+    ::v-deep(.moon-hierarchy-node) {
+        &.moon-hierarchy-node-expend:not(.moon-hierarchy-node-root):not(.active-node) {
+            .moon-hierarchy-text {
+                fill: rgb(51, 51, 51);
+            }
+        }
+        &.deep-1-node:not(.active-node) {
+            .moon-hierarchy-rect {
+                fill: #0044fe !important;
+            }
+            .moon-hierarchy-text {
+                fill: #fff !important;
+            }
+        }
+        &.active-node {
+            &:not(.moon-hierarchy-node-root) {
+                .moon-hierarchy-rect {
+                    fill: #003bc1;
+                }
+                .moon-hierarchy-text {
+                    fill: #fff;
+                }
+            }
+        }
+        .moon-hierarchy-plus {
+            stroke: #1961f5;
+            &:hover {
+                circle {
+                    fill: #5984f1;
+                }
+                line {
+                    stroke: #fff;
+                }
+            }
+        }
+    }
+    .contentmenu-item {
+        font-size: 14px;
+        padding: 0 20px;
+        position: relative;
+        white-space: nowrap;
+        overflow: hidden;
+        color: #606266;
+        height: 34px;
+        line-height: 34px;
+        box-sizing: border-box;
+        cursor: pointer;
+        &:hover {
+            background-color: #f5f7fa;
+        }
+    }
+}
 .pannel {
     position: absolute;
     label {
@@ -725,6 +820,5 @@ export default {
     box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
 }
 </style>
-
 
 ```
