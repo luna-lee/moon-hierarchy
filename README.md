@@ -2,11 +2,11 @@
 
 ### 预览地址
 
-### 	https://www.fste.top/demo/html/d3/hierarchy/#/
+### https://www.fste.top/demo/html/d3/hierarchy/#/
 
 ### 开发目的
 
-- 使用 d3 开发层级数据展示图。且支持各种自定义功能。
+-   使用 d3 开发层级数据展示图。且支持各种自定义功能。
 
 ### 安装 npm i moon-hierarchy -S
 
@@ -20,22 +20,22 @@
 
 ### Props
 
-| 参数             | 说明                                                         | 类型                  | 可选值  | 默认值                               |
-| ---------------- | ------------------------------------------------------------ | --------------------- | ------- | ------------------------------------ |
-| width            | svg 宽度                                                     | Number                | -       | 1300                                 |
-| height           | svg 高度                                                     | Number                | -       | 800                                  |
-| mode             | 渲染模式：水平方向 h，垂直方向 v                             | String                | h,v     | h                                    |
-| layout           | 布局：水平方向-左右，右左，蝴蝶，垂直->上下，下上，蝴蝶      | String                | -       | tb/bt/bf, lr/rl/bf                   |
-| limit            | 水平模式，子节点最大展示数，多余的出收起按钮 ，-1 时全部展出 | Number                | -1；1+  | 3                                    |
-| treeData         | 扁平化树数据，外部修改后，会触发画布重绘。但内置新增、修改、删除方法不会触发重绘，且会修改treeData数据 | Array                 | -       | []                                   |
-| treeOptions      | 树数据选项                                                   | Object                | -       | { id: 'id',pId: 'pId',name: 'name',} |
-| duration         | 动画过渡时间                                                 | Number                |         | 400                                  |
-| defaultOpenLevel | 默认展开层级，-1 时全部展开                                  | Number                | -1 ，1+ | 2                                    |
-| negativeIds      | 蝴蝶模型，指定负向数据对应的 id，必须是根节点的直接子节点    | Array                 | -       | []                                   |
-| config           | 配置节点连线，详情见下方说明                                 | Object                | -       | {}                                   |
-| canExpendFold    | 点击当前节点，展开和收缩子节点 ,传入函数，则接受当前节点数据，返回一个 boolean | Boolean, (d)=>boolean | -       | true                                 |
-| expendShape      | 指定点击展开的元素，必须同时设置 foldShape 才起作用，可以是 id，class 或元素,默认整个节点 | string                | -       | -                                    |
-| foldShape        | 指定点击闭合的元素，必须同时设置 expendShape 才起作用，可以是 id，class 或元素 ,默认整个节点 | string                | -       | -                                    |
+| 参数             | 说明                                                                                                     | 类型                  | 可选值  | 默认值                               |
+| ---------------- | -------------------------------------------------------------------------------------------------------- | --------------------- | ------- | ------------------------------------ |
+| width            | svg 宽度                                                                                                 | Number                | -       | 1300                                 |
+| height           | svg 高度                                                                                                 | Number                | -       | 800                                  |
+| mode             | 渲染模式：水平方向 h，垂直方向 v                                                                         | String                | h,v     | h                                    |
+| layout           | 布局：水平方向-左右，右左，蝴蝶，垂直->上下，下上，蝴蝶                                                  | String                | -       | tb/bt/bf, lr/rl/bf                   |
+| limit            | 水平模式，子节点最大展示数，多余的出收起按钮 ，-1 时全部展出                                             | Number                | -1；1+  | 3                                    |
+| treeData         | 扁平化树数据，外部修改后，会触发画布重绘。但内置新增、修改、删除方法不会触发重绘，且会修改 treeData 数据 | Array                 | -       | []                                   |
+| treeOptions      | 树数据选项                                                                                               | Object                | -       | { id: 'id',pId: 'pId',name: 'name',} |
+| duration         | 动画过渡时间                                                                                             | Number                |         | 400                                  |
+| defaultOpenLevel | 默认展开层级，-1 时全部展开                                                                              | Number                | -1 ，1+ | 2                                    |
+| negativeIds      | 蝴蝶模型，指定负向数据对应的 id，必须是根节点的直接子节点                                                | Array                 | -       | []                                   |
+| config           | 配置节点连线，详情见下方说明                                                                             | Object                | -       | {}                                   |
+| canExpendFold    | 点击当前节点，展开和收缩子节点 ,传入函数，则接受当前节点数据，返回一个 boolean                           | Boolean, (d)=>boolean | -       | true                                 |
+| expendShape      | 指定点击展开的元素，必须同时设置 foldShape 才起作用，可以是 id，class 或元素,默认整个节点                | string                | -       | -                                    |
+| foldShape        | 指定点击闭合的元素，必须同时设置 expendShape 才起作用，可以是 id，class 或元素 ,默认整个节点             | string                | -       | -                                    |
 
 #### Props.config
 
@@ -62,95 +62,91 @@
 | plus       | 折叠图标配置                                                                            | -          |
 | exShaps    | 自定义图型配置,                                                                         | []         |
 
-- #### node.on 节点监听
+-   #### node.on 节点监听
 
+| 名称               | 说明                                                                                                                                                             | 类型                                                           |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| clickFetchChildren | 点击后异步加载子节点。父节点上需要有\_hasChildren 标记 ,返回一个数组，可以是层级结构的数据。data:当前节点源数据信息；el:当前节点对应的 d3 元素对象；svg:画布元素 | (data:treeData,el:selection,svg:d3Selection)=>object[]\|object |
+| click              | 鼠标事件,禁止冒泡;                                                                                                                                               | (e:MouseEvent,d:d3Node,svg:d3Selection)=>object[]              |
+| mouseover          | 鼠标事件                                                                                                                                                         | (e:MouseEvent,d:d3Node,svg:d3Selection)=>object[]              |
+| mouseout           | 鼠标事件                                                                                                                                                         | (e:MouseEvent,d:d3Node,svg:d3Selection)=>object[]              |
+| 其他事件           | 其他事件                                                                                                                                                         | (e:MouseEvent,d:d3Node,svg:d3Selection)=>object[]              |
 
-| 名称               | 说明                                                         | 类型                                                         |
-| ------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| clickFetchChildren | 点击后异步加载子节点。父节点上需要有\_hasChildren 标记 ,返回一个数组，可以是层级结构的数据。data:当前节点源数据信息；el:当前节点对应的 d3 元素对象；svg:画布元素 | (data:treeData,el:d3Element,svg:d3Element)=>object[]\|object |
-| click              | 鼠标事件,禁止冒泡;                                           | (e:MouseEvent,d:d3LayoutData,svg:d3Element)=>object[]        |
-| mouseover          | 鼠标事件                                                     | (e:MouseEvent,d:d3LayoutData,svg:d3Element)=>object[]        |
-| mouseout           | 鼠标事件                                                     | (e:MouseEvent,d:d3LayoutData,svg:d3Element)=>object[]        |
-| 其他事件           | 其他事件                                                     | (e:MouseEvent,d:d3LayoutData,svg:d3Element)=>object[]        |
+​
 
-### 
+> [!NOTE]
+>
+> 所有的事件都不会在层级节点展开/收起按钮节点上触发
 
-- #### node.padding
+-   #### node.padding
 
-  -   可以是数字，数组，函数， 函数时接受一个当前节点数据的参数，动态返回一个数组
+    -   可以是数字，数组，函数， 函数时接受一个当前节点数据的参数，动态返回一个数组
 
-  - <!-- 数据类型 -->
+    -   <!-- 数据类型 -->
 
-  - ```javascript
-    type=[number,number,number,number]|number|(d:d3Layout)=>{return [number,number,number,number]}
-    ```
+    -   ```javascript
+        type=[number,number,number,number]|number|(d:d3Node)=>{return [number,number,number,number]}
+        ```
 
+-   ### node.rect 默认组件
 
-- ### node.rect 默认组件
+    -   <!-- 数据类型 -->
 
-  - <!-- 数据类型 -->
+    -   ```javascript
+        {
+          attrs:object,
+          on:object,
+          show:boolean
+        }
+        ```
 
-  - ```javascript
-    {
-      attrs:object,
-      on:object,
-      show:boolean
-    }
-    ```
+    -   | 参数  | 说明                                               | 默认值                  |
+        | ----- | -------------------------------------------------- | ----------------------- |
+        | attrs | 组件样式配置                                       | { attrs:{ } ,show:true} |
+        | show  | 是否显示，设置为 false 后可以通过 exShaps 自己指定 | true                    |
 
+-   ### node.text 默认组件
 
-  - | 参数  | 说明                                               | 默认值                  |
-    | ----- | -------------------------------------------------- | ----------------------- |
-    | attrs | 组件样式配置                                       | { attrs:{ } ,show:true} |
-    | show  | 是否显示，设置为 false 后可以通过 exShaps 自己指定 | true                    |
+    -   <!-- 数据类型 -->
 
-- ### node.text 默认组件
+    -   ```javascript
+        {
+          attrs:object,
+          on:object,
+          compose:object,// mode 水平模式可配置
+          show:boolean
+        }
+        ```
 
-  - <!-- 数据类型 -->
+    -   | 参数  | 说明                                               | 默认值                                           |
+        | ----- | -------------------------------------------------- | ------------------------------------------------ |
+        | attrs | 组件配置                                           | v:{font-size:16,line-height:10} h:{font-size:10} |
+        | show  | 是否显示，设置为 false 后可以通过 exShaps 自己指定 | true                                             |
 
+-   ### node.plus 默认组件
 
-  - ```javascript
-    {
-      attrs:object,
-      on:object,
-      compose:object,// mode 水平模式可配置
-      show:boolean
-    }
-    ```
+    -   <!-- 数据类型 -->
 
+    -   ```javascript
+        {
+          attrs:object,
+          on:object,
+          show:boolean
+        }
+        ```
 
-  - | 参数  | 说明                                               | 默认值                                           |
-    | ----- | -------------------------------------------------- | ------------------------------------------------ |
-    | attrs | 组件配置                                           | v:{font-size:16,line-height:10} h:{font-size:10} |
-    | show  | 是否显示，设置为 false 后可以通过 exShaps 自己指定 | true                                             |
+    -   | 参数  | 说明                                               | 默认值         |
+        | ----- | -------------------------------------------------- | -------------- |
+        | attrs | 组件配置                                           | { r: v:10;h:6} |
+        | show  | 是否显示，设置为 false 后可以通过 exShaps 自己指定 | true           |
 
-- ### node.plus 默认组件
+-   ### node.exShaps 自定义图形配置
 
-  - <!-- 数据类型 -->
+    -   一个图形数组。
 
+    -   图形嵌套，通过指定 children 实现
 
-  - ```javascript
-    {
-      attrs:object,
-      on:object,
-      show:boolean
-    }
-    ```
-
-
-  - | 参数  | 说明                                               | 默认值         |
-    | ----- | -------------------------------------------------- | -------------- |
-    | attrs | 组件配置                                           | { r: v:10;h:6} |
-    | show  | 是否显示，设置为 false 后可以通过 exShaps 自己指定 | true           |
-
-- ### node.exShaps 自定义图形配置
-
-  -   一个图形数组。
-
-  -   图形嵌套，通过指定 children 实现
-
-  -   具体配置如下：
-
+    -   具体配置如下：
 
 ```javascript
 exShaps = [
@@ -183,8 +179,6 @@ exShaps = [
     }
 ];
 ```
-
-
 
 #### Props.config.arrow 箭头
 
@@ -238,14 +232,12 @@ exShaps = [
 
 #### Props.config.customView 自定视图配置
 
-| 参数     | 说明                                                         | 默认值                   |
-| -------- | ------------------------------------------------------------ | ------------------------ |
-| width    | 视图宽度                                                     | 100                      |
-| height   | 视图高度                                                     | 50                       |
-| priority | 相对于布局节点，视图优先出现位置,rb右下，rt右上，lb左下，lt左上 | ['rb', 'rt', 'lb', 'lt'] |
-| duration | 动画过渡时间，默认props.duration中的值                       | 400                      |
-
-
+| 参数     | 说明                                                                | 默认值                   |
+| -------- | ------------------------------------------------------------------- | ------------------------ |
+| width    | 视图宽度                                                            | 100                      |
+| height   | 视图高度                                                            | 50                       |
+| priority | 相对于布局节点，视图优先出现位置,rb 右下，rt 右上，lb 左下，lt 左上 | ['rb', 'rt', 'lb', 'lt'] |
+| duration | 动画过渡时间，默认 props.duration 中的值                            | 400                      |
 
 #### 节点数据说明
 
@@ -281,13 +273,13 @@ exShaps = [
 
 ```
 
-#### 
+####
 
 ### Events
 
-| 名称      | 说明                                              | 参数                                |
-| --------- | ------------------------------------------------- | ----------------------------------- |
-| draw-done | 画布渲染完成后事件,返回当前画布节点与内容区域节点 | {svg:d3Element,container:d3Element} |
+| 名称      | 说明                                              | 参数                                    |
+| --------- | ------------------------------------------------- | --------------------------------------- |
+| draw-done | 画布渲染完成后事件,返回当前画布节点与内容区域节点 | {svg:d3Selection,container:d3Selection} |
 
 ### Slot
 
@@ -295,26 +287,24 @@ exShaps = [
 | ------- | -------------- |
 | default | 自定义视图节点 |
 
-
-
 ### Methods
 
-| 名称        | 说明                                                         | 类型                                           |
-| ----------- | ------------------------------------------------------------ | ---------------------------------------------- |
-| getNodeById | 依据数据中唯一标识 id，对应 treeOptions 中的 id， 获取对应的数据，以及元素对象 | (id:string)=>({ data: object, el: d3Element }) |
-| getAllNode | 获取所有非展开收起的节点，对应的数据，以及元素对象 | (id:string)=>({ data: Object, el: d3Element }[]) |
-| moveToCenter | 移动到中点 | ()=>void |
-| zoom | 缩放画布，  大于 1 的为放大，小于 1 大于 0 的为缩小。负数无效 | (scale:number)=>void |
-| addNode | 在targetId对应目标节点上新增子节点 ,childrenNode 是一个扁平树数据也可以是单个对象数据。 \_sign 当目标节点为根节点且为 bf 布局时，用于指定添加的方位。会修改treeData数据 | (targetId,childrenNode:object[]|
-| updateNodeByData | 更新节点对应业务数据。但不能更改组件数据，如id，pId，children，"_"开头的属性。会修改treeData数据 | (dataList:object\|object[])=>void |
-| removeNodeById | 依据节点 id，移除该节点以及其所有子节点。会修改treeData数据 | (id:string\|string[])=>void |
-| pauseZoom | 暂停缩放功能 | ()=>void |
-| continueZoom | 启动缩放功能 | ()=>void |
-| showCustomView | 显示slot对应的自定义的view视图,e:鼠标信息，d：布局节点信息，width，height，priority，duration：参考config.customView，优先级高于config.customView中的配置。 | (e, d, width, height, priority,duration)=>void |
-| hiddenCustomView | 隐藏slot对应的自定义的view视图, | ()=>void |
-| expendToNode | 展开到指定节点所在的层级,eventList指定触发节点事件。move事件将画布移动到指定节点。 | (targetNodeId:string,eventList:string[]\|string)=>void |
-
-
+| 名称             | 说明                                                                                                                                                                        | 类型                                                      |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| getNodeById      | 依据数据中唯一标识 id，对应 treeOptions 中的 id， 获取对应的数据，以及元素对象                                                                                              | (id:string)=>({ data: d3Node, el: d3Selection })          |
+| getAllNode       | 获取所有非展开收起的节点，对应的数据，以及元素对象                                                                                                                          | (id:string)=>({ data: d3Node, el: d3Selection }[])        |
+| moveToCenter     | 移动到中点                                                                                                                                                                  | ()=>void                                                  |
+| zoom             | 缩放画布， 大于 1 的为放大，小于 1 大于 0 的为缩小。负数无效                                                                                                                | (scale:number)=>void                                      |
+| addNode          | 在 targetId 对应目标节点上新增子节点 ,childrenNode 是一个扁平树数据也可以是单个对象数据。 \_sign 当目标节点为根节点且为 bf 布局时，用于指定添加的方位。会修改 treeData 数据 | (targetId,childrenNode:treeItem\|treeItem[],\_sign)=>void |
+| updateNodeByData | 更新节点对应业务数据。但不能更改组件数据，如 id，pId，children，"\_"开头的属性。会修改 treeData 数据                                                                        | (dataList:treeItem\|treeItem[])=>void                     |
+| removeNodeById   | 依据节点 id，移除该节点以及其所有子节点。会修改 treeData 数据                                                                                                               | (id:string\|string[])=>void                               |
+| pauseZoom        | 暂停缩放功能                                                                                                                                                                | ()=>void                                                  |
+| continueZoom     | 启动缩放功能                                                                                                                                                                | ()=>void                                                  |
+| showCustomView   | 显示 slot 对应的自定义的 view 视图,e:鼠标信息，d：布局节点信息，width，height，priority，duration：参考 config.customView，优先级高于 config.customView 中的配置。          | (e, d, width, height, priority,duration)=>void            |
+| hiddenCustomView | 隐藏 slot 对应的自定义的 view 视图,                                                                                                                                         | ()=>void                                                  |
+| moveToNode       | 展开到指定节点所在的层级,将节点移动到画布中间，并且可以触发 eventList 指定的节点事件。                                                                                      | (targetNodeId:string,eventList:string[]\|string)=>void    |
+| expendAllNode    | 展开所有节点                                                                                                                                                                | ()=>void                                                  |
+| foldAllNode      | 将所有节点折叠到默认层级                                                                                                                                                    | ()=>void                                                  |
 
 ### 各个节点，图形默认的 id 和 class
 
@@ -449,7 +439,7 @@ exShaps = [
 # Demo
 
 ```javascript
-   <template>
+  <template>
     <div>
         <div class="pannel">
             <div>
@@ -458,7 +448,12 @@ exShaps = [
                 <button @click="$refs.hierarchy.zoom(0.5)">缩小</button>
                 <button @click="$refs.hierarchy.pauseZoom()">暂停缩放</button>
                 <button @click="$refs.hierarchy.continueZoom()">恢复缩放</button>
-                <button @click="$refs.hierarchy.expendToNode('qyfxsbpggl', ['click','contextmenu','move'])">展示到指定节点</button>
+                <button @click="$refs.hierarchy.moveToNode('qyfxsbpggl', ['click', 'contextmenu', 'move'])">
+                    移动到指定节点，并触发contextmenu
+                </button>
+                <button @click="$refs.hierarchy.expendAllNode()">展开全部节点</button>
+                <button @click="$refs.hierarchy.foldAllNode()">折叠全部节点</button>
+
             </div>
             <div style="margin-top: 10px">
                 <input type="radio" id="h" value="h" v-model="mode" />
@@ -604,7 +599,6 @@ export default {
                             });
                         },
                         click: (e, d, el, svg) => {
-                            if (typeof d.data._isexpend == 'boolean') return;
                             svg.selectAll('.active-node').classed('active-node', false);
                             el.classed('active-node', true);
                             this.$emit('node-click', d.data);
@@ -713,8 +707,6 @@ export default {
                     name: 'g',
                     on: {
                         click: (e) => {
-                            console.log('plus click');
-
                             this.$refs.hierarchy.hiddenCustomView();
                         }
                     },
@@ -798,11 +790,11 @@ export default {
 </script>
 <style lang="scss" scoped>
 .moon-hierarchy {
+    background: #edf0fd;
     ul {
         margin: 0;
         padding: 0;
         list-style: none;
-        border: 1px solid;
     }
     li {
         display: list-item;
