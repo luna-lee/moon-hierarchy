@@ -1,6 +1,6 @@
 {
   "name": "moon-hierarchy",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "description": "",
   "main": "./vue3/moon-hierarchy.js",
   "module": "./vue3/moon-hierarchy.js",
@@ -10,6 +10,9 @@
     },
     "./vue2": {
       "import": "./vue2/moon-hierarchy.js"
+    },
+    "./*.css": {
+      "import": "./vue2/moon-hierarchy.css"
     }
   },
   "homepage": "https://github.com/luna-lee/moon-hierarchy",
@@ -23,12 +26,11 @@
   "files": [
     "vue2",
     "vue3",
-    "README.md",
-    "moon-hierarchy.css"
+    "README.md"
   ],
   "dependencies": {
     "d3": "^7.8.5",
-    "lodash": "^4.17.21"
+    "lodash-es": "^4.17.21"
   },
   "devDependencies": {}
 }
