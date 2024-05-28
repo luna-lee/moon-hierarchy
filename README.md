@@ -509,7 +509,9 @@ exShaps = [
     </div>
 </template>
 <script>
-import hierarchy from '@/components/moon-hierarchy/index.vue';
+//import hierarchy from 'moon-hierarchy/vue2';
+import hierarchy from 'moon-hierarchy';
+import 'moon-hierarchy/moon-hierarchy.css';
 export default {
     inheritAttrs: false,
     name: '',
