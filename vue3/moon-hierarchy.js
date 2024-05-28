@@ -1173,7 +1173,7 @@ const _export_sfc = (sfc, props) => {
 function isNonEmptyArray$1(arr) {
   return arr && arr.length;
 }
-const _sfc_main$2 = defineComponent({
+const _sfc_main$2 = {
   mixins: [mixins],
   inheritAttrs: false,
   props: {
@@ -1210,9 +1210,25 @@ const _sfc_main$2 = defineComponent({
         separation: 1.5,
         exShaps: [],
         ...this.config.node || {},
-        rect: { attrs: {}, show: true, on: {}, ...((_h = this.config.node) == null ? void 0 : _h.rect) || {} },
-        text: { attrs: {}, show: true, on: {}, compose: {}, ...((_i = this.config.node) == null ? void 0 : _i.text) || {} },
-        plus: { attrs: {}, show: true, on: {}, ...((_j = this.config.node) == null ? void 0 : _j.plus) || {} }
+        rect: {
+          attrs: {},
+          show: true,
+          on: {},
+          ...((_h = this.config.node) == null ? void 0 : _h.rect) || {}
+        },
+        text: {
+          attrs: {},
+          show: true,
+          on: {},
+          compose: {},
+          ...((_i = this.config.node) == null ? void 0 : _i.text) || {}
+        },
+        plus: {
+          attrs: {},
+          show: true,
+          on: {},
+          ...((_j = this.config.node) == null ? void 0 : _j.plus) || {}
+        }
       };
       let padding = this.setPaddingFormat(nodeconfig.padding);
       let paddingList = padding();
@@ -1386,14 +1402,22 @@ const _sfc_main$2 = defineComponent({
       sourceData._isexpend = !sourceData._isexpend;
       let parent = this.treeDataFactory.objById[this.lastClickNode.data[symbolKey]];
       if (sourceData._isexpend) {
-        parent.children.splice(parent.children.indexOf(sourceData), 0, ...parent._exChildren.filter((v) => v._sign == sourceData._sign));
+        parent.children.splice(
+          parent.children.indexOf(sourceData),
+          0,
+          ...parent._exChildren.filter((v) => v._sign == sourceData._sign)
+        );
       } else {
         exChildrenIds = parent._exChildren.filter((v) => v._sign == sourceData._sign).map((v) => v[this.symbolKey]);
         exChildrenNode = this.hierarchyLayoutData.descendants().filter((n) => exChildrenIds.includes(n.data[symbolKey]));
-        parent.children = parent.children.filter((v) => !exChildrenIds.includes(v[this.symbolKey]));
+        parent.children = parent.children.filter(
+          (v) => !exChildrenIds.includes(v[this.symbolKey])
+        );
       }
       this.drawView();
-      const afterCalcuNode = this.hierarchyLayoutData.find((n) => n.data[symbolKey] == this.lastClickNode.data[symbolKey]);
+      const afterCalcuNode = this.hierarchyLayoutData.find(
+        (n) => n.data[symbolKey] == this.lastClickNode.data[symbolKey]
+      );
       if (!sourceData._isexpend) {
         exChildrenNode.forEach((node) => {
           this.foldLinksAndNodes(node, afterCalcuNode);
@@ -1429,19 +1453,31 @@ const _sfc_main$2 = defineComponent({
         this.linksContainer = this.container.append("g").attr("class", "moon-hierarchy-links");
       let path = this.linksContainer.selectAll().data(links).join("path");
       this.setAttrByOpt(path, this.linkConifg);
-      path.attr("id", ({ source, target }) => getLinkId(source.data[symbolKey], target.data[symbolKey]));
+      path.attr(
+        "id",
+        ({ source, target }) => getLinkId(source.data[symbolKey], target.data[symbolKey])
+      );
       path.attr("d", (d) => {
         return this.setLinkPath(d);
       }).attr("transform", ({ target }) => {
         return this.onNodeFoldTranslate(this.lastClickNode, target);
-      }).transition().duration(this.duration).attr("transform", ({ target }) => `translate(${this.getTranslateOffset(target)},0) scale(1)`);
+      }).transition().duration(this.duration).attr(
+        "transform",
+        ({ target }) => `translate(${this.getTranslateOffset(target)},0) scale(1)`
+      );
     },
     updateLinks(links) {
       for (let i = 0; i < links.length; i++) {
         let item = links[i];
-        const id = this.getLinkId(item.source.data[this.symbolKey], item.target.data[this.symbolKey]);
+        const id = this.getLinkId(
+          item.source.data[this.symbolKey],
+          item.target.data[this.symbolKey]
+        );
         const path = this.svg.select(`#${id}`);
-        path.transition().duration(this.duration).attr("transform", ` translate(${this.getTranslateOffset(item.target)},0)  scale(1)`).attr("d", () => {
+        path.transition().duration(this.duration).attr(
+          "transform",
+          ` translate(${this.getTranslateOffset(item.target)},0)  scale(1)`
+        ).attr("d", () => {
           return this.setLinkPath(item);
         });
       }
@@ -1482,7 +1518,10 @@ const _sfc_main$2 = defineComponent({
     addNodeWidthToData(list) {
       for (let i = 0; i < list.length; i++) {
         let item = list[i];
-        item._nodeConfig = { ...this.nodeConfig, nodeWidth: this.getNodeWidth(item) };
+        item._nodeConfig = {
+          ...this.nodeConfig,
+          nodeWidth: this.getNodeWidth(item)
+        };
         if (isNonEmptyArray$1(item.children))
           this.addNodeWidthToData(item.children);
       }
@@ -1494,10 +1533,16 @@ const _sfc_main$2 = defineComponent({
           let item = treeList[i];
           item.offset = offset;
           if (isNonEmptyArray$1(item.children)) {
-            let maxNode = maxBy(findTreeSameLevelData(treeData, item), function(o) {
-              return o._nodeConfig.nodeWidth;
-            });
-            iterator(item.children, item.offset + maxNode._nodeConfig.nodeWidth);
+            let maxNode = maxBy(
+              findTreeSameLevelData(treeData, item),
+              function(o) {
+                return o._nodeConfig.nodeWidth;
+              }
+            );
+            iterator(
+              item.children,
+              item.offset + maxNode._nodeConfig.nodeWidth
+            );
           }
         }
       }
@@ -1528,7 +1573,11 @@ const _sfc_main$2 = defineComponent({
       return 0;
     },
     getNodeWidth(item) {
-      let width = this.calculateTextWidth(item[this.inner_treeOptions.name], this.nodeConfig.fontSize, this.nodeConfig.fontFamily);
+      let width = this.calculateTextWidth(
+        item[this.inner_treeOptions.name],
+        this.nodeConfig.fontSize,
+        this.nodeConfig.fontFamily
+      );
       let padding = this.nodeConfig.padding(item);
       return width + padding[1] + padding[3];
     },
@@ -1539,7 +1588,10 @@ const _sfc_main$2 = defineComponent({
       const y = () => this.nodeConfig.nodeHeight / 2 - this.defsNodeConfig.loadingSize / 2;
       if (flag) {
         const use = d3.select(`#${nodeId}`).append("use").attr("class", "moon-hierarchy-loading").attr("xlink:href", "#loading");
-        use.attr("x", x).attr("y", y).attr("transform-origin", (d) => `${x(d) + this.defsNodeConfig.loadingSize / 2} ${y() + this.defsNodeConfig.loadingSize / 2}`);
+        use.attr("x", x).attr("y", y).attr(
+          "transform-origin",
+          (d) => `${x(d) + this.defsNodeConfig.loadingSize / 2} ${y() + this.defsNodeConfig.loadingSize / 2}`
+        );
       } else
         this.svg.select(`#${nodeId}`).select("use").remove();
     },
@@ -1616,7 +1668,7 @@ const _sfc_main$2 = defineComponent({
       });
     }
   }
-});
+};
 const _hoisted_1$1 = { ref: "svg" };
 const _hoisted_2$1 = {
   ref: "CoustomView",
@@ -1635,7 +1687,7 @@ const horizontal = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_ren
 function isNonEmptyArray(arr) {
   return arr && arr.length;
 }
-const _sfc_main$1 = defineComponent({
+const _sfc_main$1 = {
   mixins: [mixins],
   inheritAttrs: false,
   props: {
@@ -1655,9 +1707,24 @@ const _sfc_main$1 = defineComponent({
         separation: 1.5,
         exShaps: [],
         ...((_a = this.config) == null ? void 0 : _a.node) || {},
-        rect: { attrs: {}, show: true, on: {}, ...((_b = this.config.node) == null ? void 0 : _b.rect) || {} },
-        text: { attrs: {}, show: true, on: {}, ...((_c = this.config.node) == null ? void 0 : _c.text) || {} },
-        plus: { attrs: {}, show: true, on: {}, ...((_d = this.config.node) == null ? void 0 : _d.plus) || {} }
+        rect: {
+          attrs: {},
+          show: true,
+          on: {},
+          ...((_b = this.config.node) == null ? void 0 : _b.rect) || {}
+        },
+        text: {
+          attrs: {},
+          show: true,
+          on: {},
+          ...((_c = this.config.node) == null ? void 0 : _c.text) || {}
+        },
+        plus: {
+          attrs: {},
+          show: true,
+          on: {},
+          ...((_d = this.config.node) == null ? void 0 : _d.plus) || {}
+        }
       };
       nodeconfig.padding = this.setPaddingFormat(nodeconfig.padding);
       let nodeWidth = nodeconfig.nodeWidth;
@@ -1837,19 +1904,31 @@ const _sfc_main$1 = defineComponent({
         this.linksContainer = this.container.append("g").attr("class", "moon-hierarchy-links");
       let path = this.linksContainer.selectAll().data(links).join("path");
       this.setAttrByOpt(path, this.linkConifg);
-      path.attr("id", ({ source, target }) => getLinkId(source.data[symbolKey], target.data[symbolKey]));
+      path.attr(
+        "id",
+        ({ source, target }) => getLinkId(source.data[symbolKey], target.data[symbolKey])
+      );
       path.attr("d", (d) => {
         return this.setLinkPath(d);
       }).attr("transform", ({ target }) => {
         return this.onNodeFoldTranslate(this.lastClickNode, target);
-      }).transition().duration(this.duration).attr("transform", ({ target }) => `translate(0,${this.getTranslateOffset(target)}) scale(1)`);
+      }).transition().duration(this.duration).attr(
+        "transform",
+        ({ target }) => `translate(0,${this.getTranslateOffset(target)}) scale(1)`
+      );
     },
     updateLinks(links) {
       for (let i = 0; i < links.length; i++) {
         let item = links[i];
-        const id = this.getLinkId(item.source.data[this.symbolKey], item.target.data[this.symbolKey]);
+        const id = this.getLinkId(
+          item.source.data[this.symbolKey],
+          item.target.data[this.symbolKey]
+        );
         const path = this.svg.select(`#${id}`);
-        path.transition().duration(this.duration).attr("transform", ` translate(0,${this.getTranslateOffset(item.target)} )  scale(1)`).attr("d", () => {
+        path.transition().duration(this.duration).attr(
+          "transform",
+          ` translate(0,${this.getTranslateOffset(item.target)} )  scale(1)`
+        ).attr("d", () => {
           return this.setLinkPath(item);
         });
       }
@@ -1872,7 +1951,10 @@ const _sfc_main$1 = defineComponent({
     addNodeWidthToData(list) {
       for (let i = 0; i < list.length; i++) {
         let item = list[i];
-        item._nodeConfig = { ...this.nodeConfig, nodeWidth: this.nodeConfig.nodeWidth };
+        item._nodeConfig = {
+          ...this.nodeConfig,
+          nodeWidth: this.nodeConfig.nodeWidth
+        };
         item["_" + this.inner_treeOptions.name] = this.getFormatTextArr(item);
         if (isNonEmptyArray(item.children))
           this.addNodeWidthToData(item.children);
@@ -1890,7 +1972,10 @@ const _sfc_main$1 = defineComponent({
       if (flag) {
         source._loading = flag;
         const use = d3.select(`#${nodeId}`).append("use").attr("class", "moon-hierarchy-loading").attr("xlink:href", "#loading");
-        use.attr("x", x).attr("y", y).attr("transform-origin", (d) => `${x(d) + this.defsNodeConfig.loadingSize / 2} ${y(d) + this.defsNodeConfig.loadingSize / 2}`);
+        use.attr("x", x).attr("y", y).attr(
+          "transform-origin",
+          (d) => `${x(d) + this.defsNodeConfig.loadingSize / 2} ${y(d) + this.defsNodeConfig.loadingSize / 2}`
+        );
       } else {
         delete source._loading;
         this.svg.select(`#${nodeId}`).select("use").remove();
@@ -1916,13 +2001,23 @@ const _sfc_main$1 = defineComponent({
           }
         }
       }
-      textSplit(text, textWidth, this.nodeConfig.fontSize, this.nodeConfig.fontFamily, lineList);
+      textSplit(
+        text,
+        textWidth,
+        this.nodeConfig.fontSize,
+        this.nodeConfig.fontFamily,
+        lineList
+      );
       if (lineNum && lineList.length > lineNum) {
         lineList = lineList.slice(0, lineNum);
         const str = lineList[lineNum - 1];
         for (let i = str.length; i >= 0; i--) {
           const str2 = str.slice(0, i) + ellipse;
-          const tw2 = calculateTextWidth(str2, this.nodeConfig.fontSize, this.nodeConfig.fontFamily);
+          const tw2 = calculateTextWidth(
+            str2,
+            this.nodeConfig.fontSize,
+            this.nodeConfig.fontFamily
+          );
           if (textWidth >= tw2) {
             lineList[lineNum - 1] = str2;
             break;
@@ -2008,7 +2103,7 @@ const _sfc_main$1 = defineComponent({
       });
     }
   }
-});
+};
 const _hoisted_1 = { ref: "svg" };
 const _hoisted_2 = {
   ref: "CoustomView",
@@ -2025,7 +2120,7 @@ function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
 }
 const vertical = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render$1]]);
 const index_vue_vue_type_style_index_0_lang = "";
-const _sfc_main = defineComponent({
+const _sfc_main = {
   name: "MoonHierarchy",
   components: { horizontal, vertical },
   inheritAttrs: false,
@@ -2054,7 +2149,11 @@ const _sfc_main = defineComponent({
       this.$refs.MoonHierarchy.scale(scale);
     },
     addNode(targetNodeId, childrenNode, _sign) {
-      this.$refs.MoonHierarchy.addNodeToTargetNode(targetNodeId, childrenNode, _sign);
+      this.$refs.MoonHierarchy.addNodeToTargetNode(
+        targetNodeId,
+        childrenNode,
+        _sign
+      );
     },
     removeNodeById(id) {
       this.$refs.MoonHierarchy.removeNodeById(id);
@@ -2084,7 +2183,7 @@ const _sfc_main = defineComponent({
       this.$refs.MoonHierarchy.foldAllNode();
     }
   }
-});
+};
 function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_horizontal = resolveComponent("horizontal");
   const _component_vertical = resolveComponent("vertical");
@@ -2092,7 +2191,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     class: normalizeClass(_ctx.$attrs.class),
     style: normalizeStyle(_ctx.$attrs.style)
   }, [
-    _ctx.mode == "h" ? (openBlock(), createBlock(_component_horizontal, mergeProps({
+    $props.mode == "h" ? (openBlock(), createBlock(_component_horizontal, mergeProps({
       key: 0,
       ref: "MoonHierarchy"
     }, _ctx.$attrs), {
