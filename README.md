@@ -13,7 +13,8 @@
 ### vue 文件中使用
 
 ```javascript
-- import hierarchy from 'moon-hierarchy';
+- vue2中使用 import hierarchy from 'moon-hierarchy/vue2';
+- vue3中使用 import hierarchy from 'moon-hierarchy';
 - import 'moon-hierarchy/dist/moon-hierarchy.css';
   components: {  hierarchy  }
 ```
