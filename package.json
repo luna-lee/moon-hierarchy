@@ -1,6 +1,6 @@
 {
   "name": "moon-hierarchy",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "",
   "main": "./vue3/moon-hierarchy.js",
   "module": "./vue3/moon-hierarchy.js",
@@ -21,8 +21,10 @@
     "node": ">= 10.13.0"
   },
   "files": [
-    "dist",
-    "README.md"
+    "vue2",
+    "vue3",
+    "README.md",
+    "moon-hierarchy.css"
   ],
   "dependencies": {
     "d3": "^7.8.5",
