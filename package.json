@@ -1,6 +1,6 @@
 {
   "name": "moon-hierarchy",
-  "version": "2.2.9",
+  "version": "2.3.0",
   "description": "",
   "main": "./vue3/moon-hierarchy.js",
   "module": "./vue3/moon-hierarchy.js",

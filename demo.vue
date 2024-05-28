@@ -1,13 +1,17 @@
 <template>
     <div>
         <div class="pannel">
-            <div>
+            <div class="button-group">
                 <button @click="$refs.hierarchy.moveToCenter()">移动到中心</button>
                 <button @click="$refs.hierarchy.zoom(1.5)">放大</button>
                 <button @click="$refs.hierarchy.zoom(0.5)">缩小</button>
                 <button @click="$refs.hierarchy.pauseZoom()">暂停缩放</button>
                 <button @click="$refs.hierarchy.continueZoom()">恢复缩放</button>
-                <button @click="$refs.hierarchy.expendToNode('qyfxsbpggl', ['click','contextmenu','move'])">展示到指定节点</button>
+                <button @click="$refs.hierarchy.moveToNode('qyfxsbpggl', ['click', 'contextmenu'])">
+                    移动到指定节点，并触发contextmenu
+                </button>
+                <button @click="$refs.hierarchy.expendAllNode()">展开全部节点</button>
+                <button @click="$refs.hierarchy.foldAllNode()">折叠全部节点</button>
             </div>
             <div style="margin-top: 10px">
                 <input type="radio" id="h" value="h" v-model="mode" />
@@ -58,14 +62,12 @@
 </template>
 <script>
 import hierarchy from '@/components/moon-hierarchy/index.vue';
-import ContextmenuView from './ContextmenuView.vue';
 export default {
     inheritAttrs: false,
     name: '',
     props: {},
     components: {
-        hierarchy,
-        ContextmenuView
+        hierarchy
     },
     created() {
         this.setWidthHeight();
@@ -86,7 +88,6 @@ export default {
     },
     data() {
         return {
-            ContextmenuViewShow: false,
             mode: 'v',
             layout: 'bf',
             treeData: [],
@@ -153,7 +154,6 @@ export default {
                             });
                         },
                         click: (e, d, el, svg) => {
-                            if (typeof d.data._isexpend == 'boolean') return;
                             svg.selectAll('.active-node').classed('active-node', false);
                             el.classed('active-node', true);
                             this.$emit('node-click', d.data);
@@ -262,8 +262,6 @@ export default {
                     name: 'g',
                     on: {
                         click: (e) => {
-                            console.log('plus click');
-
                             this.$refs.hierarchy.hiddenCustomView();
                         }
                     },
@@ -347,11 +345,11 @@ export default {
 </script>
 <style lang="scss" scoped>
 .moon-hierarchy {
+    background: #edf0fd;
     ul {
         margin: 0;
         padding: 0;
         list-style: none;
-        border: 1px solid;
     }
     li {
         display: list-item;
@@ -434,8 +432,18 @@ export default {
         }
     }
 }
+.button-group {
+    display: flex;
+    gap: 10px;
+}
 .pannel {
+    left: 0;
+    top: 0;
+    padding: 10px;
+    box-sizing: border-box;
     position: absolute;
+    width: 100%;
+    background-color: rgba(250, 250, 250, 0.5);
     label {
         cursor: pointer;
     }
@@ -444,8 +452,7 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        border: 1px solid;
-        background-color: pink;
+        border-top: 1px solid;
         div {
             padding: 5px;
         }

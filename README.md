@@ -12,11 +12,17 @@
 
 ### vue 文件中使用
 
+- #### vue2中使用
 ```javascript
-- vue2中使用 import hierarchy from 'moon-hierarchy/vue2';
-- vue3中使用 import hierarchy from 'moon-hierarchy';
-- import 'moon-hierarchy/dist/moon-hierarchy.css';
-  components: {  hierarchy  }
+import hierarchy from 'moon-hierarchy/vue2';
+import 'moon-hierarchy/moon-hierarchy.css';
+components: {  hierarchy  }
+```
+- #### vue3中使用
+```javascript
+import hierarchy from 'moon-hierarchy';
+import 'moon-hierarchy/moon-hierarchy.css';
+components: {  hierarchy  }
 ```
 
 ### Props
