@@ -373,6 +373,11 @@ const mixins = {
           );
         if (isNonEmptyArray$2(d.data.children) || isNonEmptyArray$2(d.data._children) || d.data._hasChildren)
           classList.push("moon-hierarchy-node-haschildren");
+        else
+          arrayRemoveItem(
+            classList,
+            (item) => item == "moon-hierarchy-node-haschildren"
+          );
         let classContent = customNodeAttrs.class;
         if (classContent) {
           if (typeof classContent == "function") {
