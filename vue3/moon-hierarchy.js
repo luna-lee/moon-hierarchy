@@ -4,7 +4,7 @@ import { openBlock, createElementBlock, withDirectives, createElementVNode, rend
 const urlAlphabet = "useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict";
 let nanoid = (size = 21) => {
   let id = "";
-  let bytes = crypto.getRandomValues(new Uint8Array(size));
+  let bytes = crypto.getRandomValues(new Uint8Array(size |= 0));
   while (size--) {
     id += urlAlphabet[bytes[size] & 63];
   }
@@ -260,7 +260,11 @@ const mixins = {
         return [];
     },
     initTreeData() {
-      this.treeDataFactory = flatToTree(this.treeData, this.inner_treeOptions.id, this.inner_treeOptions.pId);
+      this.treeDataFactory = flatToTree(
+        this.treeData,
+        this.inner_treeOptions.id,
+        this.inner_treeOptions.pId
+      );
       let removedId = [];
       if (this.treeDataFactory.treeData.length > 1) {
         this.treeDataFactory.treeData.slice(1).forEach((item) => {
@@ -279,7 +283,10 @@ const mixins = {
       this.svg = d3.create("svg").attr("class", "moon-hierarchy-svg").attr("width", this.width).attr("height", this.height).attr("cursor", "move");
     },
     createContainDom() {
-      this.container = this.svg.append("g").attr("class", "moon-hierarchy-container").attr("font-family", "sans-serif").attr("transform", `translate(${this.width / 2},${this.height / 2}) scale(1)`);
+      this.container = this.svg.append("g").attr("class", "moon-hierarchy-container").attr("font-family", "sans-serif").attr(
+        "transform",
+        `translate(${this.width / 2},${this.height / 2}) scale(1)`
+      );
     },
     drawSvg() {
       this.$watch(
@@ -334,9 +341,16 @@ const mixins = {
       if (this.layout == "bf" && root.children) {
         let positive = root.children.filter((v) => v._sign == 1);
         let negative = root.children.filter((v) => v._sign == -1);
-        let _positive = this.treeLayout(d3.hierarchy({ ...root, children: positive }));
-        let _negative = this.treeLayout(d3.hierarchy({ ...root, children: negative }));
-        this.hierarchyLayoutData.children = [...(_positive == null ? void 0 : _positive.children) || [], ...(_negative == null ? void 0 : _negative.children) || []];
+        let _positive = this.treeLayout(
+          d3.hierarchy({ ...root, children: positive })
+        );
+        let _negative = this.treeLayout(
+          d3.hierarchy({ ...root, children: negative })
+        );
+        this.hierarchyLayoutData.children = [
+          ...(_positive == null ? void 0 : _positive.children) || [],
+          ...(_negative == null ? void 0 : _negative.children) || []
+        ];
       }
     },
     setNodeClassAttr(selectionNode) {
@@ -353,7 +367,10 @@ const mixins = {
         if (isNonEmptyArray$2(d.data.children))
           classList.push("moon-hierarchy-node-expend");
         else
-          arrayRemoveItem(classList, (item) => item == "moon-hierarchy-node-expend");
+          arrayRemoveItem(
+            classList,
+            (item) => item == "moon-hierarchy-node-expend"
+          );
         if (isNonEmptyArray$2(d.data.children) || isNonEmptyArray$2(d.data._children) || d.data._hasChildren)
           classList.push("moon-hierarchy-node-haschildren");
         let classContent = customNodeAttrs.class;
@@ -425,7 +442,14 @@ const mixins = {
     },
     updateNodeByData(dataList) {
       dataList = this.formatToArray(dataList);
-      let exAttrs = [this.inner_treeOptions.id, this.inner_treeOptions.pId, "children", "level", "track", "trigger"];
+      let exAttrs = [
+        this.inner_treeOptions.id,
+        this.inner_treeOptions.pId,
+        "children",
+        "level",
+        "track",
+        "trigger"
+      ];
       dataList.forEach((data) => {
         let old = this.treeDataFactory.objById[data[this.symbolKey]];
         if (!old) {
@@ -438,7 +462,9 @@ const mixins = {
         }, {});
         Object.assign(old, data, backup);
         this.InnerChangeTreeData = true;
-        let sourceData = this.treeData.find((v) => v[this.symbolKey] == data[this.symbolKey]);
+        let sourceData = this.treeData.find(
+          (v) => v[this.symbolKey] == data[this.symbolKey]
+        );
         Object.keys(sourceData).forEach((key) => {
           sourceData[key] = old[key];
         });
@@ -450,7 +476,12 @@ const mixins = {
         let node = nodeList[i];
         const id = this.getNodeId(node.data[this.symbolKey]);
         const selectionNode = this.svg.select(`#${id}`);
-        this.addListener(selectionNode, this.nodeListener, this.exceptListener, node);
+        this.addListener(
+          selectionNode,
+          this.nodeListener,
+          this.exceptListener,
+          node
+        );
         selectionNode.on("click", (_) => {
           var _a, _b;
           _.stopPropagation();
@@ -497,13 +528,18 @@ const mixins = {
       for (let i = 0; i < toRemoveId.length; i++) {
         let n = this.treeDataFactory.objById[toRemoveId[i]];
         this.svg.select(`#${this.getNodeId(n[this.symbolKey])}`).remove();
-        const id = this.getLinkId(n[this.inner_treeOptions.pId], n[this.symbolKey]);
+        const id = this.getLinkId(
+          n[this.inner_treeOptions.pId],
+          n[this.symbolKey]
+        );
         this.svg.select(`#${id}`).remove();
       }
       let parentNode = this.treeDataFactory.objById[sourceData[this.inner_treeOptions.pId]];
       if (parentNode) {
         if (parentNode._exChildren) {
-          let index2 = parentNode._exChildren.findIndex((v) => v[this.symbolKey] == targetNodeId);
+          let index2 = parentNode._exChildren.findIndex(
+            (v) => v[this.symbolKey] == targetNodeId
+          );
           if (index2 >= 0)
             parentNode._exChildren.splice(index2, 1);
         }
@@ -515,20 +551,34 @@ const mixins = {
               1
             );
             if (this.limit > 0 && parentNode._exChildren) {
-              let _sameList = parentNode._exChildren.filter((v) => v._sign == sourceData._sign);
-              let sameList = arr.filter((v) => v._sign == sourceData._sign && typeof v._isexpend != "boolean");
+              let _sameList = parentNode._exChildren.filter(
+                (v) => v._sign == sourceData._sign
+              );
+              let sameList = arr.filter(
+                (v) => v._sign == sourceData._sign && typeof v._isexpend != "boolean"
+              );
               if (sameList.length < this.limit) {
                 let insert = _sameList.slice(0, this.limit - sameList.length);
-                let expendNodeIndex = arr.findIndex((v) => typeof v._isexpend == "boolean" && v._sign == sourceData._sign);
+                let expendNodeIndex = arr.findIndex(
+                  (v) => typeof v._isexpend == "boolean" && v._sign == sourceData._sign
+                );
                 arr.splice(expendNodeIndex, 0, ...insert);
                 arrayRemoveItem(parentNode._exChildren, (item) => {
-                  return insert.find((v) => v[this.symbolKey] == item[this.symbolKey]);
+                  return insert.find(
+                    (v) => v[this.symbolKey] == item[this.symbolKey]
+                  );
                 });
               }
-              _sameList = parentNode._exChildren.filter((v) => v._sign == sourceData._sign);
-              sameList = arr.filter((v) => v._sign == sourceData._sign && typeof v._isexpend != "boolean");
+              _sameList = parentNode._exChildren.filter(
+                (v) => v._sign == sourceData._sign
+              );
+              sameList = arr.filter(
+                (v) => v._sign == sourceData._sign && typeof v._isexpend != "boolean"
+              );
               if (sameList.length + _sameList.length <= this.limit) {
-                let expendNode = arr.find((v) => typeof v._isexpend == "boolean" && v._sign == sourceData._sign);
+                let expendNode = arr.find(
+                  (v) => typeof v._isexpend == "boolean" && v._sign == sourceData._sign
+                );
                 if (expendNode)
                   this.removeNode(expendNode[this.symbolKey], false, true);
               }
@@ -539,7 +589,9 @@ const mixins = {
         pChildren("_children");
       }
       arrayRemoveItem(this.treeDataFactory.flatData, (item) => {
-        return [...sourceData.trigger, targetNodeId].includes(item[this.symbolKey]);
+        return [...sourceData.trigger, targetNodeId].includes(
+          item[this.symbolKey]
+        );
       });
       [...sourceData.trigger, targetNodeId].forEach((id) => {
         delete this.treeDataFactory.objById[id];
@@ -551,7 +603,9 @@ const mixins = {
       });
       this.InnerChangeTreeData = true;
       arrayRemoveItem(this.treeData, (item) => {
-        return [...sourceData.trigger, targetNodeId].includes(item[this.symbolKey]);
+        return [...sourceData.trigger, targetNodeId].includes(
+          item[this.symbolKey]
+        );
       });
       if (redraw)
         this.drawView();
@@ -583,7 +637,10 @@ const mixins = {
             e.stopPropagation();
             const id = qt ? qt.data[this.symbolKey] : d.data[this.symbolKey];
             const sourceData = this.treeDataFactory.objById[id];
-            this.onNodeExpendOrFold(qt || d, !isNonEmptyArray$2(sourceData.children));
+            this.onNodeExpendOrFold(
+              qt || d,
+              !isNonEmptyArray$2(sourceData.children)
+            );
           });
         }
       }
@@ -633,13 +690,13 @@ const mixins = {
       }
     },
     async onNodeExpendOrFold(node, expend = false) {
+      const symbolKey = this.symbolKey;
+      this.lastClickNode = node;
+      const sourceData = this.treeDataFactory.objById[this.lastClickNode.data[symbolKey]];
       if (typeof this.canExpendFold == "boolean" && !this.canExpendFold)
         return;
       if (typeof this.canExpendFold == "function" && !this.canExpendFold(sourceData))
         return;
-      const symbolKey = this.symbolKey;
-      this.lastClickNode = node;
-      const sourceData = this.treeDataFactory.objById[this.lastClickNode.data[symbolKey]];
       if (expend) {
         if (isNonEmptyArray$2(sourceData._children)) {
           sourceData.children = sourceData._children;
@@ -656,7 +713,9 @@ const mixins = {
       }
       this.drawView();
       let isFold = isNonEmptyArray$2(sourceData._children);
-      const afterCalcuNode = this.hierarchyLayoutData.find((n) => n.data[symbolKey] == this.lastClickNode.data[symbolKey]);
+      const afterCalcuNode = this.hierarchyLayoutData.find(
+        (n) => n.data[symbolKey] == this.lastClickNode.data[symbolKey]
+      );
       if (isFold) {
         this.foldLinksAndNodes(this.lastClickNode, afterCalcuNode);
       }
@@ -667,13 +726,19 @@ const mixins = {
     },
     onNodeMouseOver(node) {
       node.links().forEach((link) => {
-        const id = this.getLinkId(link.source.data[this.symbolKey], link.target.data[this.symbolKey]);
+        const id = this.getLinkId(
+          link.source.data[this.symbolKey],
+          link.target.data[this.symbolKey]
+        );
         this.svg.select(`#${id}`).classed("moon-hierarchy-node-hover-link", true);
       });
     },
     onNodeMouseOut(node) {
       node.links().forEach((link) => {
-        const id = this.getLinkId(link.source.data[this.symbolKey], link.target.data[this.symbolKey]);
+        const id = this.getLinkId(
+          link.source.data[this.symbolKey],
+          link.target.data[this.symbolKey]
+        );
         let line = this.svg.select(`#${id}`);
         line.classed("moon-hierarchy-node-hover-link", false);
       });
@@ -699,29 +764,41 @@ const mixins = {
           _sign = 1;
       } else
         _sign = sourceData._sign;
-      let node = this.hierarchyLayoutData.find((item) => item.data[this.symbolKey] == targetNodeId);
+      let node = this.hierarchyLayoutData.find(
+        (item) => item.data[this.symbolKey] == targetNodeId
+      );
       this.lastClickNode = node;
       childrenList = this.formatToArray(childrenList);
       if (childrenList.length) {
         sourceData.track.map((id) => {
-          this.treeDataFactory.objById[id].trigger.push(...childrenList.map((v) => v[this.symbolKey]));
+          this.treeDataFactory.objById[id].trigger.push(
+            ...childrenList.map((v) => v[this.symbolKey])
+          );
         });
         let list = childrenList.map((v) => {
           v._sign = _sign;
           v[this.inner_treeOptions.pId] = sourceData[this.symbolKey];
           return v;
         });
-        let rootIndex = list.findIndex((v) => v[this.symbolKey] == sourceData[this.symbolKey]);
+        let rootIndex = list.findIndex(
+          (v) => v[this.symbolKey] == sourceData[this.symbolKey]
+        );
         if (rootIndex != -1)
           list.splice(rootIndex, 1);
         const copySourceData = { ...sourceData };
         copySourceData.children = [];
         list.push(copySourceData);
-        let { objById, flatData } = flatToTree(list, this.symbolKey, this.inner_treeOptions.pId);
+        let { objById, flatData } = flatToTree(
+          list,
+          this.symbolKey,
+          this.inner_treeOptions.pId
+        );
         let sutTree = objById[sourceData[this.symbolKey]].children;
         if ((_a = sourceData._exChildren) == null ? void 0 : _a.length) {
           let children = sourceData.children || sourceData._children;
-          let lastExpendNodeIndex = children.findIndex((v) => typeof v._isexpend == "boolean" && v._sign == _sign);
+          let lastExpendNodeIndex = children.findIndex(
+            (v) => typeof v._isexpend == "boolean" && v._sign == _sign
+          );
           let lastExpendNode = children[lastExpendNodeIndex];
           sourceData._exChildren.push(...sutTree);
           if (lastExpendNode == null ? void 0 : lastExpendNode._isexpend) {
@@ -729,7 +806,13 @@ const mixins = {
           }
           if (!lastExpendNode._isexpend) {
             lastExpendNode._isexpend = true;
-            children.splice(children.indexOf(lastExpendNode), 0, ...node.data._exChildren.filter((v) => v._sign == lastExpendNode._sign));
+            children.splice(
+              children.indexOf(lastExpendNode),
+              0,
+              ...node.data._exChildren.filter(
+                (v) => v._sign == lastExpendNode._sign
+              )
+            );
           }
         } else {
           if (sourceData.children) {
@@ -754,11 +837,18 @@ const mixins = {
       if (sourceData._hasChildren && !sourceData._loading) {
         try {
           this.setLoadingIcon(sourceData);
-          let childrenList = await ((_b = (_a = this.nodeListener)["clickFetchChildren"]) == null ? void 0 : _b.call(_a, sourceData, this.svg.select(`#${this.getNodeId(sourceData[this.symbolKey])}`), this.svg));
+          let childrenList = await ((_b = (_a = this.nodeListener)["clickFetchChildren"]) == null ? void 0 : _b.call(
+            _a,
+            sourceData,
+            this.svg.select(`#${this.getNodeId(sourceData[this.symbolKey])}`),
+            this.svg
+          ));
           childrenList = this.formatToArray(childrenList);
           if (childrenList.length) {
             sourceData.track.map((id) => {
-              this.treeDataFactory.objById[id].trigger.push(...childrenList.map((v) => v[this.symbolKey]));
+              this.treeDataFactory.objById[id].trigger.push(
+                ...childrenList.map((v) => v[this.symbolKey])
+              );
             });
             let list = childrenList.map((v) => {
               v._sign = sourceData._sign;
@@ -766,11 +856,17 @@ const mixins = {
                 v[this.inner_treeOptions.pId] = sourceData[this.symbolKey];
               return v;
             });
-            let rootIndex = list.findIndex((v) => v[this.symbolKey] == sourceData[this.symbolKey]);
+            let rootIndex = list.findIndex(
+              (v) => v[this.symbolKey] == sourceData[this.symbolKey]
+            );
             if (rootIndex != -1)
               list.splice(rootIndex, 1);
             list.push(sourceData);
-            let { objById, flatData } = flatToTree(list, this.symbolKey, this.inner_treeOptions.pId);
+            let { objById, flatData } = flatToTree(
+              list,
+              this.symbolKey,
+              this.inner_treeOptions.pId
+            );
             sourceData.children = objById[sourceData[this.symbolKey]].children;
             flatData.filter((v) => v[this.symbolKey] != sourceData[this.symbolKey]).forEach((v) => {
               let id = v[this.symbolKey];
@@ -791,7 +887,10 @@ const mixins = {
       let updateList = [];
       for (let i = 0; i < links.length; i++) {
         let item = links[i];
-        const id = this.getLinkId(item.source.data[this.symbolKey], item.target.data[this.symbolKey]);
+        const id = this.getLinkId(
+          item.source.data[this.symbolKey],
+          item.target.data[this.symbolKey]
+        );
         const selectionNode = this.svg.select(`#${id}`);
         if (selectionNode.node()) {
           updateList.push(item);
@@ -815,7 +914,10 @@ const mixins = {
         selectionNode.transition().duration(this.duration).attr("transform", () => {
           return this.onNodeFoldTranslate(newNode, link.target);
         });
-        const linkId = getLinkId(link.source.data[symbolKey], link.target.data[symbolKey]);
+        const linkId = getLinkId(
+          link.source.data[symbolKey],
+          link.target.data[symbolKey]
+        );
         const selectionLink = this.svg.select(`#${linkId}`);
         selectionLink.transition().duration(this.duration).attr("transform", () => {
           return this.onNodeFoldTranslate(newNode, link.target);
@@ -870,7 +972,10 @@ const mixins = {
         }
         let zoom = e.transform;
         this.currentScale = zoom.k;
-        this.container.transition().duration(zoom.d).attr("transform", `translate(${Number(zoom.x)},${zoom.y}) scale(${zoom.k})`);
+        this.container.transition().duration(zoom.d).attr(
+          "transform",
+          `translate(${Number(zoom.x)},${zoom.y}) scale(${zoom.k})`
+        );
       };
       this.zoom = d3.zoom().scaleExtent(scaleRange).on("zoom", zoomEvent);
       this.zoom.zoomEvent = zoomEvent;
@@ -911,7 +1016,10 @@ const mixins = {
       }, selectionNode);
     },
     getNodeById(id) {
-      return { data: this.treeDataFactory.objById[id], el: this.svg.select(`#${this.getNodeId(id)}`) };
+      return {
+        data: this.treeDataFactory.objById[id],
+        el: this.svg.select(`#${this.getNodeId(id)}`)
+      };
     },
     getAllNode() {
       const idList = Object.keys(this.treeDataFactory.objById);
@@ -920,7 +1028,10 @@ const mixins = {
         const id = idList[i];
         let data = this.treeDataFactory.objById[id];
         if (typeof data._isexpend != "boolean")
-          nodeList.push({ data, el: this.svg.select(`#${this.getNodeId(id)}`) });
+          nodeList.push({
+            data,
+            el: this.svg.select(`#${this.getNodeId(id)}`)
+          });
       }
       return nodeList;
     },
@@ -934,11 +1045,21 @@ const mixins = {
       let padding = () => [0, 0, 0, 0];
       let paddingValue = inputValue;
       if (typeof paddingValue == "number") {
-        padding = () => [paddingValue, paddingValue, paddingValue, paddingValue];
+        padding = () => [
+          paddingValue,
+          paddingValue,
+          paddingValue,
+          paddingValue
+        ];
       }
       if (Array.isArray(paddingValue)) {
         if (paddingValue.length == 2) {
-          padding = () => [paddingValue[0], paddingValue[1], paddingValue[0], paddingValue[1]];
+          padding = () => [
+            paddingValue[0],
+            paddingValue[1],
+            paddingValue[0],
+            paddingValue[1]
+          ];
         }
         if (paddingValue.length == 4) {
           padding = () => paddingValue;
@@ -987,17 +1108,23 @@ const mixins = {
       }, this.foreignObject);
       if (attrs.hasChangeNode)
         this.foreignObject.attr("transform", attrs.transform_begin);
-      this.foreignObject.transition().duration(attrs.duration || ((_b = (_a = this.config) == null ? void 0 : _a.customView) == null ? void 0 : _b.duration) || this.duration).attr("transform", attrs.transform);
+      this.foreignObject.transition().duration(
+        attrs.duration || ((_b = (_a = this.config) == null ? void 0 : _a.customView) == null ? void 0 : _b.duration) || this.duration
+      ).attr("transform", attrs.transform);
       this.foreignObject.on("click", (e) => e.stopPropagation());
       this.foreignObject.node().append(this.$refs.CoustomView);
     },
     updateCustomView() {
       if (this.foreignObject && this.drawCustomViewLastConfig.d) {
         let item = this.drawCustomViewLastConfig.d;
-        const selectionNode = this.svg.select(`#${this.getNodeId(item.data[this.symbolKey])}`);
+        const selectionNode = this.svg.select(
+          `#${this.getNodeId(item.data[this.symbolKey])}`
+        );
         if (selectionNode.node()) {
           let id = this.drawCustomViewLastConfig.d.data[this.symbolKey];
-          let node = this.hierarchyLayoutData.find((item2) => item2.data[this.symbolKey] == id);
+          let node = this.hierarchyLayoutData.find(
+            (item2) => item2.data[this.symbolKey] == id
+          );
           let { e, width, height, priority } = this.drawCustomViewLastConfig;
           if (node) {
             this.drawCustomView(e, node, width, height, priority);
@@ -1049,7 +1176,9 @@ const mixins = {
             }
           }
           if (item.level == this.defaultOpenLevel) {
-            let node = this.hierarchyLayoutData.find((v) => v.data[this.symbolKey] == item[this.symbolKey]);
+            let node = this.hierarchyLayoutData.find(
+              (v) => v.data[this.symbolKey] == item[this.symbolKey]
+            );
             obj.node = node;
           }
         }
@@ -1059,28 +1188,42 @@ const mixins = {
           let children = p.children || p._children;
           let exChildrenIds = p._exChildren.filter((v) => v._sign == item._sign).map((v) => v[this.symbolKey]);
           if (item.level == this.defaultOpenLevel) {
-            obj.parentNode = this.hierarchyLayoutData.find((v) => v.data[this.symbolKey] == p[this.symbolKey]);
+            obj.parentNode = this.hierarchyLayoutData.find(
+              (v) => v.data[this.symbolKey] == p[this.symbolKey]
+            );
             obj.exChildrenIds = exChildrenIds;
           }
-          arrayRemoveItem(children, (v) => exChildrenIds.includes(v[this.symbolKey]));
+          arrayRemoveItem(
+            children,
+            (v) => exChildrenIds.includes(v[this.symbolKey])
+          );
         }
         if (obj.node)
           foldTargetNode.push(obj);
       });
       this.drawView();
       if (foldTargetNode.length)
-        foldTargetNode.forEach(({ node: oldNode, parentNode, exChildrenIds }) => {
-          let node = this.hierarchyLayoutData.find((v) => v.data[this.symbolKey] == oldNode.data[this.symbolKey]);
-          this.foldLinksAndNodes(oldNode, node);
-          if (parentNode && exChildrenIds) {
-            node = this.hierarchyLayoutData.find((v) => v.data[this.symbolKey] == parentNode.data[this.symbolKey]);
-            this.foldLinksAndNodes(parentNode, node, (link) => {
-              return exChildrenIds.includes(link.target.data[this.symbolKey]);
-            });
+        foldTargetNode.forEach(
+          ({ node: oldNode, parentNode, exChildrenIds }) => {
+            let node = this.hierarchyLayoutData.find(
+              (v) => v.data[this.symbolKey] == oldNode.data[this.symbolKey]
+            );
+            this.foldLinksAndNodes(oldNode, node);
+            if (parentNode && exChildrenIds) {
+              node = this.hierarchyLayoutData.find(
+                (v) => v.data[this.symbolKey] == parentNode.data[this.symbolKey]
+              );
+              this.foldLinksAndNodes(parentNode, node, (link) => {
+                return exChildrenIds.includes(link.target.data[this.symbolKey]);
+              });
+            }
           }
-        });
+        );
       else
-        this.foldLinksAndNodes(this.hierarchyLayoutData, this.hierarchyLayoutData);
+        this.foldLinksAndNodes(
+          this.hierarchyLayoutData,
+          this.hierarchyLayoutData
+        );
       this.moveToCenter();
     },
     expendToNode(sourceData) {
@@ -1090,7 +1233,9 @@ const mixins = {
           let node = this.treeDataFactory.objById[id];
           if (!this.lastClickNode) {
             if (isNonEmptyArray$2(node._children)) {
-              this.lastClickNode = this.hierarchyLayoutData.find((item) => item.data[this.symbolKey] == id);
+              this.lastClickNode = this.hierarchyLayoutData.find(
+                (item) => item.data[this.symbolKey] == id
+              );
             }
           }
           if (isNonEmptyArray$2(node._children)) {
@@ -1100,12 +1245,20 @@ const mixins = {
           if (index2 < sourceData.track.length - 1) {
             let nextId = sourceData.track[index2 + 1];
             let children = node.children || node._children;
-            let ifInExChildren = (_a = node == null ? void 0 : node._exChildren) == null ? void 0 : _a.find((v) => v[this.symbolKey] == nextId);
+            let ifInExChildren = (_a = node == null ? void 0 : node._exChildren) == null ? void 0 : _a.find(
+              (v) => v[this.symbolKey] == nextId
+            );
             if (ifInExChildren) {
-              let expendNode = children.find((v) => typeof v._isexpend == "boolean" && v._sign == ifInExChildren._sign);
+              let expendNode = children.find(
+                (v) => typeof v._isexpend == "boolean" && v._sign == ifInExChildren._sign
+              );
               if (!expendNode._isexpend) {
                 expendNode._isexpend = true;
-                children.splice(children.indexOf(expendNode), 0, ...node._exChildren.filter((v) => v._sign == expendNode._sign));
+                children.splice(
+                  children.indexOf(expendNode),
+                  0,
+                  ...node._exChildren.filter((v) => v._sign == expendNode._sign)
+                );
               }
             }
           }
@@ -1120,10 +1273,14 @@ const mixins = {
       if (!sourceData) {
         throw `moon-hierarchy\u7EC4\u4EF6\uFF1A\u753B\u5E03\u4E2D\u6CA1\u6709\u5339\u914D\u5230${this.symbolKey}=${targetNodeId}\u7684\u8282\u70B9`;
       }
-      let node = this.hierarchyLayoutData.find((item) => item.data[this.symbolKey] == sourceData[this.symbolKey]);
+      let node = this.hierarchyLayoutData.find(
+        (item) => item.data[this.symbolKey] == sourceData[this.symbolKey]
+      );
       if (!node) {
         this.expendToNode(sourceData);
-        node = this.hierarchyLayoutData.find((item) => item.data[this.symbolKey] == sourceData[this.symbolKey]);
+        node = this.hierarchyLayoutData.find(
+          (item) => item.data[this.symbolKey] == sourceData[this.symbolKey]
+        );
       }
       this.moveToCenter({
         ...this.nodeToCenterXY(node),
